@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+import './ForumView.css';
 
-class ForumView extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-        }
-    }
-
-    render(){
-        return(
-            <div className = "template">
-                Forum View
-            </div>
-        )
-    }
-}
+function ForumView() {  
+    return (
+      <div>
+        Forum View
+      </div>
+    );
+  }
 
 export default ForumView;
