@@ -2,7 +2,7 @@ const User = require('../../models/User');
 
 module.exports = {
     //register single user
-    registerUser: async({username}) => {
+    registerUser: async({ username }) => {
         try{
             const user = new User({
                 username: username
@@ -15,5 +15,5 @@ module.exports = {
         } catch(err){
             throw(err);
         }
-    }
+    },
 }

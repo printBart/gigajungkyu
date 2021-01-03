@@ -1,0 +1,47 @@
+[
+    {
+        "longitude": -123.2460,
+        "latitude": 49.2606,
+        "faculty": "engineering"
+    },
+    {
+        "longitude": -123.2460,
+        "latitude": 49.2616,
+        "faculty": "engineering"
+    },
+    {
+        "longitude": -123.2470,
+        "latitude": 49.2616,
+        "faculty": "engineering"
+    },
+    {
+        "longitude": -123.2360,
+        "latitude": 49.2616,
+        "faculty": "business"
+    },
+    {
+        "longitude": -123.2538,
+        "latitude": 49.2648,
+        "faculty": "business"
+    },
+    {
+        "longitude": -123.2538,
+        "latitude": 49.2638,
+        "faculty": "arts"
+    },
+    {
+        "longitude": -123.2548,
+        "latitude": 49.2648,
+        "faculty": "arts"
+    },
+    {
+        "longitude": -123.2548,
+        "latitude": 49.2628,
+        "faculty": "forestry"
+    },
+    {
+        "longitude": -123.2548,
+        "latitude": 49.2618,
+        "faculty": "otter"
+    }
+]

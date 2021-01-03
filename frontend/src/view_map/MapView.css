@@ -1,0 +1,65 @@
+.createThreadPopupContainer .mapboxgl-popup-content {
+    color: #F3F3DD !important;
+    background-color: #91785D !important;
+    border-color: #91785D !important;
+    max-width: 250px !important;
+    box-shadow: -3px -3px 2px #8B5D33 !important;
+    padding: 10px !important;
+    transition: all 500ms;
+    cursor: pointer;
+}
+.createThreadPopupContainer .mapboxgl-popup-content:hover{
+    opacity: 0.9;
+}
+
+.postPopupContainer .mapboxgl-popup-content{
+    color: #F3F3DD !important;
+    background-color: lightblue !important;
+    max-width: 250px !important;
+    padding: 10px !important;
+    opacity: 0.9;
+    cursor: pointer;
+    transition: all 500ms;
+}
+
+.postPopupContainer .mapboxgl-popup-content:hover{
+    opacity: 0.8;
+}
+
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+    border-bottom-color: #8B5D33 !important;
+}
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+    border-top-color: lightblue !important;
+}
+/*.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+    border-right-color: #8B5D33 !important;
+}
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+    border-left-color: #8B5D33 !important;
+}*/
+
+.createThreadPopup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.postPopup{
+    color: white;
+}
+.postPopupCreator{
+    font-size: 12px;
+    font-style: italic;
+    padding-bottom: 5px;
+}
+.postPopupTitle{
+    font-size: 15px;
+}
+.postPopupDescription{
+    font-size: 15px;
+}

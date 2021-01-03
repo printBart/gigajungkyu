@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+import './Template.css';
 
-class Template extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-        }
-    }
-
-    render(){
-        return(
-            <div className = "template">
-                test
-            </div>
-        )
-    }
-}
+function Template() {  
+    return (
+      <div>
+        Forum View
+      </div>
+    );
+  }
 
 export default Template;
