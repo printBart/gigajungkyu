@@ -1,3 +1,10 @@
+.createPostPopupContainer .mapboxgl-popup-content{
+    padding: 15px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    cursor: default;
+}
 .createThreadPopupContainer .mapboxgl-popup-content {
     color: #F3F3DD !important;
     background-color: #91785D !important;
@@ -30,11 +37,6 @@
 .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
 .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
     border-bottom-color: #8B5D33 !important;
-}
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
-    border-top-color: lightblue !important;
 }
 /*.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
     border-right-color: #8B5D33 !important;

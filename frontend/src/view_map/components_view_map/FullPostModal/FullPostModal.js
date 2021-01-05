@@ -20,8 +20,14 @@ function FullPostModal(props){
   //text
   const[comment, setComment] = useState('');
 
-  //list of comments
+  //unsorted tree comments (raw)
+  const[treeComments, setTreeComments] = useState([]);
+
+  //list of sorted comments
   const[comments, setComments] = useState([]);
+
+  //list of all hidden comments
+  const[hiddenComments, setHiddeComments] = useState([]);
 
   function onClickModalBackground(event){
     if (modal && !modal.current.contains(event.target)){
@@ -36,7 +42,9 @@ function FullPostModal(props){
     );
     fetch(request).then((response) => {
       response.json().then((data) => {
-        inOrderTraversal(data.data.getAllCommentsByPostId, 0);
+        setTreeComments(data.data.getAllCommentsByPostId);
+        sortTraversedComments(data.data.getAllCommentsByPostId);
+        //inOrderTraversal(data.data.getAllCommentsByPostId, 0);
       })
     })
   }, [])
@@ -50,40 +58,47 @@ function FullPostModal(props){
     fetch(request).then((response) => {
         response.json().then((data) => {
           setComment('');
-          console.log(data);
+          data.data.createComment.layer = 0;
+          setComments(oldComments => [...oldComments, data.data.createComment]);
         })
     });
   }
 
-  function inOrderTraversal(nodes, layerCount){
-    if(nodes){
-      nodes.forEach(function(node){
-        if(node){
-          node.layer = layerCount;
-          setComments(oldArr => [...oldArr, node]);
-          inOrderTraversal(node.childComments, layerCount+1);
-        }
-        else{
-          node.layer = layerCount;
-          setComments(oldArr => [...oldArr, node]);
-        }
-      });
+  function hideComments(nodeId){
+    const nodeExists = hiddenComments.some(comment => comment === nodeId);
+    if(nodeExists){
+      setHiddeComments(hiddenComments.filter(comment => comment !== nodeId));
+    } else{
+      setHiddeComments(oldArray => [...oldArray, nodeId]);
     }
   }
 
-  function inOrderSearchTraversal(nodes, nodeId){
+  useEffect(() => {
+    sortTraversedComments(treeComments);
+  }, [hiddenComments])
+
+  function sortTraversedComments(nodes){
+    const result = [];
+    inOrderTraversal(nodes, 0, result);
+    setComments(result);
+  }
+
+  function inOrderTraversal(nodes, layerCount, result){
     if(nodes){
       nodes.forEach(function(node){
-        if(node){
-          if(node._id === nodeId){
-
-          }
-          inOrderSearchTraversal(node.childComments);
+        if(node && hiddenComments.indexOf(node._id)<0){
+        //if(node && node._id !== hiddenNodeId){
+          node.layer = layerCount;
+          result.push(node);
+          //setComments(oldArr => [...oldArr, node]);
+          inOrderTraversal(node.childComments, layerCount+1, result);
         }
         else{
-          
+          node.layer = layerCount;
+          result.push(node);
+          //setComments(oldArr => [...oldArr, node]);
         }
-      })
+      });
     }
   }
 
@@ -150,7 +165,8 @@ function FullPostModal(props){
             <FullPostComment 
               key = {index}
               data = {comment}
-              addNewComment = {addNewComment}/>
+              addNewComment = {addNewComment}
+              hideComments = {hideComments}/>
           )
         })}
       </div>

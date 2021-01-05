@@ -16,8 +16,8 @@ import { createPostQuery, getAllPostsQuery } from '../functions_global/queries';
 
 //components
 import Emoji from '../components_global/Emoji/Emoji';
-import CreateThreadModal from './components_view_map/CreateThreadModal/CreateThreadModal';
 import FullPostModal from './components_view_map/FullPostModal/FullPostModal';
+import CreatePostPopup from './components_view_map/CreatePostPopup/CreatePostPopup';
 
 function MapView(){
     //state
@@ -69,6 +69,11 @@ function MapView(){
         if(e){
             e.preventDefault();
         }
+        setViewport({
+            latitude: userport.latitude,
+            longitude: userport.longitude,
+            zoom: viewport.zoom,
+        });
         toggleCreateThreadModal(!createThreadModalVisible)
     }
 
@@ -129,12 +134,6 @@ function MapView(){
     if(userport){
         return(
             <div>
-                {createThreadModalVisible &&
-                    <CreateThreadModal
-                        toggleModal = {toggleModal}
-                        post = {post}
-                        onChangeTitle = {onChangeTitle}
-                        onChangeDescription = {onChangeDescription}/>}
                 {fullPostModalVisible &&
                     <FullPostModal
                         toggleModal = {updateFullPostModal}
@@ -158,8 +157,7 @@ function MapView(){
                                     closeButton={false}
                                     dynamicPosition={false}
                                     anchor="bottom" 
-                                    dynamicPosition={false}
-                                    offsetTop = {-20}>
+                                    offsetLeft = {10}>
                                     <div className = "postPopup">
                                         <div className = "postPopupCreator">
                                             {post.creator}
@@ -177,9 +175,7 @@ function MapView(){
                     })}
                     <Marker
                         latitude = {userport.latitude}
-                        longitude = {userport.longitude}
-                        offsetTop={-25}
-                        offsetLeft={-10}>
+                        longitude = {userport.longitude}>
                         <Emoji
                             symbol = "🐻"
                             label = "engineering"/>
@@ -190,7 +186,9 @@ function MapView(){
                             longitude = {userport.longitude}
                             closeButton={false}
                             dynamicPosition={false}
-                            anchor="top">
+                            anchor="top"
+                            offsetTop={25}
+                            offsetLeft={10}>
                             <div
                                 className = "createThreadPopup"
                                 onClick = {toggleModal}>
@@ -201,6 +199,24 @@ function MapView(){
                             </div>
                         </Popup>
                     </div>
+                    {createThreadModalVisible &&
+                        <div>
+                            <Popup
+                            latitude = {userport.latitude}
+                            longitude = {userport.longitude}
+                            closeButton={false}
+                            dynamicPosition={false}
+                            anchor="bottom"
+                            offsetLeft={10}
+                            className = "createPostPopupContainer">
+                            <CreatePostPopup
+                                toggleModal = {toggleModal}
+                                post = {post}
+                                onChangeTitle = {onChangeTitle}
+                                onChangeDescription = {onChangeDescription}/>
+                        </Popup>
+                        </div>
+                    }
                     
                     {mock_user_data.map((marker, index) => {
                         return(

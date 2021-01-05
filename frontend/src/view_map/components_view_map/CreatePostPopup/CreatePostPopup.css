@@ -1,0 +1,78 @@
+.createPostPopup{
+    font-family: SF Pro Text;
+    font-style: normal;
+}
+.emojiPickerContainer{
+    position: absolute;
+    bottom: 102.5%;
+    right: 0%;
+    width: calc(100% - 30px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 15px;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+}
+.emojiClickContainer{
+    cursor: pointer;
+}
+.createPostPopupInputsContainer{
+    display: flex;
+    flex-direction: column;
+}
+.createPostTitleInput{
+    border: none;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    outline: none;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+.createPostDescriptionInput{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px;
+    background: #F7F7F7;
+    border-radius: 15px;
+    outline: none;
+    border: none;
+    font-family: SF Pro Text;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 19px;
+    resize: none;
+    height: 100px;
+}
+.createPostDescriptionInput::placeholder, .createPostTitleInput::placeholder{
+    opacity: 0.3;
+}
+.createPostPopupFooter{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.createPostPopupFooterBtn{
+    margin: 10px 5px 0px 5px;
+    cursor: pointer;
+}
+.cancel{
+    font-family: SF Pro Text;
+    opacity: 0.5;
+}
+.post{
+    background: #7367FF;
+    border-radius: 2222px;
+    padding: 5px 15px;
+    color: white;
+    font-weight: bold;
+}

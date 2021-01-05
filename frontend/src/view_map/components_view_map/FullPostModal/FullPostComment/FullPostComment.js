@@ -27,7 +27,6 @@ function FullPostComment(props) {
             })
         });
     }
-    console.log(props);
 
     return (
         <div className = "fullPostComment" style ={{paddingLeft: 40*props.data.layer}}>
@@ -35,6 +34,7 @@ function FullPostComment(props) {
                 <div><FaChevronUp/></div>
                 <div className = "voteCounter">2</div>
                 <div><FaChevronDown /></div>
+                <div className = "hideComment" onClick = {() => props.hideComments(props.data._id)}></div>
             </div>
             <div className = "fullBodyPostModal">
                 <div className = "fullBodyPostModalHeader">
