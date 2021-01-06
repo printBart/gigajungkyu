@@ -150,14 +150,15 @@ function MapView(){
                     </div>
                     {posts && posts.map((post, index) => {
                         return(
-                            <div key = {index} className = "postPopupContainer" onClick = {() => updateFullPostModal(post)}>
+                            <div key = {index} onClick = {() => updateFullPostModal(post)}>
                                 <Popup
                                     latitude = {post.latitude}
                                     longitude = {post.longitude}
                                     closeButton={false}
                                     dynamicPosition={false}
                                     anchor="bottom" 
-                                    offsetLeft = {10}>
+                                    offsetLeft = {10}
+                                    className = "postPopupContainer">
                                     <div className = "postPopup">
                                         <div className = "postPopupCreator">
                                             {post.creator}

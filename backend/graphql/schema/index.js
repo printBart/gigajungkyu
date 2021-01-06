@@ -32,6 +32,7 @@ type RootQuery{
     getUserByUsername(usernname: String!): User
     getAllPosts: [Post]!
     getAllCommentsByPostId(postId: String!): [Comment]!
+    getChildCommentsByCommentId(commentId: String!): [Comment]!
 }
 
 type RootMutation{

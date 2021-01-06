@@ -42,5 +42,18 @@ module.exports = {
         } catch(err){
             throw(err);
         }
+    },
+
+    getChildCommentsByCommentId: async({ commentId }) => {
+        try{
+            var comments = await Comment.find({_id: commentId});
+
+            return comments.map(comment => {
+                return transformComment(comment);
+            });
+
+        } catch(err){
+
+        }
     }
 }

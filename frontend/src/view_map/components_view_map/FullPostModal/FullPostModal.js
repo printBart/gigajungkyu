@@ -12,7 +12,7 @@ import { postRequest } from '../../../functions_global/request';
 
 //components
 import FullPostComment from './FullPostComment/FullPostComment';
-import { createCommentQuery, getAllCommentsByPostIdQuery } from '../../../functions_global/queries';
+import { createCommentQuery, getAllCommentsByPostIdQuery, getChildCommentsByCommentId } from '../../../functions_global/queries';
 
 function FullPostModal(props){ 
   const modal = useRef(null);
@@ -44,7 +44,6 @@ function FullPostModal(props){
       response.json().then((data) => {
         setTreeComments(data.data.getAllCommentsByPostId);
         sortTraversedComments(data.data.getAllCommentsByPostId);
-        //inOrderTraversal(data.data.getAllCommentsByPostId, 0);
       })
     })
   }, [])
@@ -64,6 +63,20 @@ function FullPostModal(props){
     });
   }
 
+  //load more comments
+  function loadMoreComments(nodeId, layer){
+    var request = postRequest(
+      getChildCommentsByCommentId(nodeId),
+        "/graphql"
+    );
+    fetch(request).then((response) => {
+        response.json().then((data) => {
+          loadTraversedComments(data.data.getChildCommentsByCommentId, layer, nodeId)
+        })
+    });
+  }
+
+  //hide comments
   function hideComments(nodeId){
     const nodeExists = hiddenComments.some(comment => comment === nodeId);
     if(nodeExists){
@@ -83,37 +96,49 @@ function FullPostModal(props){
     setComments(result);
   }
 
+  function loadTraversedComments(nodes, layer, parentNodeId){
+    const result = []
+    inOrderTraversal(nodes, layer, result);
+    const parentIndex = comments.findIndex(comment => comment._id === result[0]._id);
+    let newComments = [...comments];
+    let sliceArr1 = newComments.slice(0,parentIndex);
+    let sliceArr2 = newComments.slice(parentIndex+1);
+    let combArr = [...sliceArr1, ...result, ...sliceArr2];
+    //NOTE: still need to filter out leaf node data
+    setComments(combArr);
+  }
+
   function inOrderTraversal(nodes, layerCount, result){
     if(nodes){
       nodes.forEach(function(node){
         if(node && hiddenComments.indexOf(node._id)<0){
-        //if(node && node._id !== hiddenNodeId){
           node.layer = layerCount;
           result.push(node);
-          //setComments(oldArr => [...oldArr, node]);
           inOrderTraversal(node.childComments, layerCount+1, result);
         }
         else{
           node.layer = layerCount;
           result.push(node);
-          //setComments(oldArr => [...oldArr, node]);
         }
       });
     }
   }
 
-  function addNewComment(){
-    setComments([]);
-    var request = postRequest(
+  function addNewComment(newComment, layer){
+    const request = postRequest(
       getAllCommentsByPostIdQuery(props.postData._id),
       "/graphql"
     );
     fetch(request).then((response) => {
       response.json().then((data) => {
-        console.log(data.data.getAllCommentsByPostId);
-        inOrderTraversal(data.data.getAllCommentsByPostId, 0);
+        setTreeComments(data.data.getAllCommentsByPostId);
+        newComment.layer = layer + 1;
+        const parentIndex = comments.findIndex(comment => comment._id === newComment.parentComment._id);
+        let newComments = [...comments];
+        newComments.splice(parentIndex+1, 0, newComment);
+        setComments(newComments);
       })
-    })
+    });
   }
 
   return (
@@ -161,13 +186,17 @@ function FullPostModal(props){
           </div>
         </div>
         {comments && comments.map((comment, index) => {
-          return (
-            <FullPostComment 
-              key = {index}
-              data = {comment}
-              addNewComment = {addNewComment}
-              hideComments = {hideComments}/>
-          )
+          if(comment.date){ //check if its last node
+            return (
+              <FullPostComment 
+                key = {index}
+                data = {comment}
+                isHidden = {hiddenComments.indexOf(comment._id)>=0}
+                addNewComment = {addNewComment}
+                hideComments = {hideComments}
+                loadMoreComments = {loadMoreComments}/>
+            )
+          }
         })}
       </div>
     </div>

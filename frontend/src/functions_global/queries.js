@@ -94,14 +94,50 @@ export function getAllCommentsByPostIdQuery(postId){
                         }
                         childComments{
                             _id
-                            description
-                            creator
-                            latitude
-                            longitude
-                            date
-                            post{
-                                _id
-                            }
+                        }
+                    }
+                }
+            }
+        }`
+    }
+}
+
+export function getChildCommentsByCommentId(commentId){
+    return{
+        query:
+        `query{
+            getChildCommentsByCommentId(commentId: "${commentId}"){
+                _id
+                description
+                creator
+                latitude
+                longitude
+                date
+                post{
+                    _id
+                }
+                childComments{
+                    _id
+                    description
+                    creator
+                    latitude
+                    longitude
+                    date
+                    post{
+                        _id
+                    }
+                    childComments{
+                        _id
+                        description
+                        creator
+                        latitude
+                        longitude
+                        date
+                        post{
+                            _id
+                        }
+                        childComments{
+                            _id
                         }
                     }
                 }

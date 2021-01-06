@@ -9,3 +9,11 @@
 .hideComment:hover{
     opacity: 0.5;
 }
+.loadmoreComment{
+    display:inline-block;
+    background-color: lightgray;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
