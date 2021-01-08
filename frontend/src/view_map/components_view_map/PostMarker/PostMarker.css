@@ -1,0 +1,59 @@
+.postMarker{
+    display: flex;
+}
+.postMakerSideContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.postMarkerVoteValue{
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 400;
+}
+.postMakerMainContainer{
+    width: 100%;
+    font-family: SF Pro Text;
+    padding-left: 15px;
+    letter-spacing: -0.418484px;
+    padding-right: 15px;
+}
+.postMarkerHeader{
+    display: flex;
+    opacity: 0.5;
+    font-size: 12px;
+}
+.postMarkerCreator{
+    margin-right: 10px;
+}
+.postMarkerTitle{
+    font-weight: 600;
+    font-size: 20px;
+    padding-top: 5px;
+    line-height: 24px;
+}
+.postMarkerDescription{
+    font-size: 14px;
+    padding-top: 5px;
+    opacity: 0.8;
+}
+.postMarkerFooter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    opacity: 0.5;
+}
+.postMarkerFooterContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.postMarkerFooterIcon{
+    padding-right: 7.5px;
+}

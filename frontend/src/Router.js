@@ -5,16 +5,18 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import MapView from './view_map/MapView';
 import MessageView from './view_message/MessageView';
 import ForumView from './view_forum/ForumView';
-import AuthenticationView from './view_auth/AuthenticationView'
+import LoginView from './view_auth/view_login/LoginView';
+import RegisterView from './view_auth/view_register/RegisterView';
 
 function Router(){
     return(
         <BrowserRouter>
+            <Route exact path = "/login" component = {LoginView} />
+            <Route exact path = "/register" component = {RegisterView} />
             <Route exact path = "/map" component = {MapView} />
             <Route exact path = "/message" component = {MessageView} />
             <Route exact path = "/forum" component = {ForumView} />
-            <Route exact path = "/auth" component = {AuthenticationView} />
-            <Route exact path = "/" component = {AuthenticationView} />
+            <Route exact path = "/" component = {LoginView} />
         </BrowserRouter>
     )
 }

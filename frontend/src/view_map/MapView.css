@@ -6,37 +6,31 @@
     cursor: default;
 }
 .createThreadPopupContainer .mapboxgl-popup-content {
-    color: #F3F3DD !important;
-    background-color: #91785D !important;
-    border-color: #91785D !important;
-    max-width: 250px !important;
-    box-shadow: -3px -3px 2px #8B5D33 !important;
-    padding: 10px !important;
+    border-radius: 20px;
+    max-width: 250px;
+    padding: 10px 20px;
     transition: all 500ms;
     cursor: pointer;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
 }
 .createThreadPopupContainer .mapboxgl-popup-content:hover{
     opacity: 0.9;
 }
 
 .postPopupContainer .mapboxgl-popup-content{
-    color: black !important;
-    max-width: 250px !important;
-    padding: 10px !important;
-    opacity: 0.9;
+    color: black;
+    max-width: 250px;
+    padding: 10px;
     cursor: pointer;
     transition: all 500ms;
     border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    background: white;
+    width: 350px;
 }
 
 .postPopupContainer .mapboxgl-popup-content:hover{
-    opacity: 0.8;
-}
-
-.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
-    border-bottom-color: #8B5D33 !important;
+    opacity: 0.9;
 }
 /*.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
     border-right-color: #8B5D33 !important;
@@ -49,16 +43,4 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-}
-.postPopupCreator{
-    font-size: 12px;
-    font-style: italic;
-    padding-bottom: 5px;
-}
-.postPopupTitle{
-    font-size: 15px;
-}
-.postPopupDescription{
-    font-size: 15px;
 }

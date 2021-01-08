@@ -18,13 +18,14 @@ import { createPostQuery, getAllPostsQuery } from '../functions_global/queries';
 import Emoji from '../components_global/Emoji/Emoji';
 import FullPostModal from './components_view_map/FullPostModal/FullPostModal';
 import CreatePostPopup from './components_view_map/CreatePostPopup/CreatePostPopup';
+import PostMarker from './components_view_map/PostMarker/PostMarker';
 
 function MapView(){
     //state
     const [viewport, setViewport] = useState({
         longitude: -123.2460,
         latitude: 49.2606,
-        zoom: 13
+        zoom: 13,
     });
 
     //markers
@@ -46,22 +47,27 @@ function MapView(){
 
     //on mount
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setViewport({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                zoom: 13
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition((position) => {
+                console.log(position);
+                setViewport({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    zoom: 13
+                });
             });
-        });
-        getAllPosts();
-        navigator.geolocation.watchPosition((position) => {
-            setUserport({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            });
-        },
-            (error) => console.log(error),
-        );
+            getAllPosts();
+            navigator.geolocation.watchPosition((position) => {
+                console.log(position);
+                setUserport({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                });
+                console.log("hi");
+            },
+                (error) => console.log(error),
+            );
+        }
     }, []);
 
     //toggle create thread modal
@@ -84,7 +90,7 @@ function MapView(){
             setViewport({
                 latitude: post.latitude,
                 longitude: post.longitude,
-                zoom: 15
+                zoom: viewport.zoom
             });
             setSelectedFullPostModalId(post);
         }
@@ -159,17 +165,8 @@ function MapView(){
                                     anchor="bottom" 
                                     offsetLeft = {10}
                                     className = "postPopupContainer">
-                                    <div className = "postPopup">
-                                        <div className = "postPopupCreator">
-                                            {post.creator}
-                                        </div>
-                                        <b className = "postPopupTitle">
-                                            {post.title}
-                                        </b><br/>
-                                        <div className = "postPopupDescription">
-                                            {post.description}
-                                        </div>
-                                    </div>
+                                    <PostMarker
+                                        postData = {post}/>
                                 </Popup>
                             </div>
                         );
