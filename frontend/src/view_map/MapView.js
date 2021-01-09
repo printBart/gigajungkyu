@@ -1,5 +1,6 @@
 import ReactMapGL, { NavigationControl, Marker, Popup, FlyToInterpolator } from 'react-map-gl';
 import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
 //icons
 import { FiEdit } from 'react-icons/fi';
@@ -19,6 +20,8 @@ import Emoji from '../components_global/Emoji/Emoji';
 import FullPostModal from './components_view_map/FullPostModal/FullPostModal';
 import CreatePostPopup from './components_view_map/CreatePostPopup/CreatePostPopup';
 import PostMarker from './components_view_map/PostMarker/PostMarker';
+
+let socket;
 
 function MapView(){
     //state
@@ -47,9 +50,12 @@ function MapView(){
 
     //on mount
     useEffect(() => {
+        //socket
+        socket = io('http://localhost:8080');
+        
+
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log(position);
                 setViewport({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
@@ -58,28 +64,34 @@ function MapView(){
             });
             getAllPosts();
             navigator.geolocation.watchPosition((position) => {
-                console.log(position);
                 setUserport({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 });
-                console.log("hi");
             },
                 (error) => console.log(error),
             );
         }
     }, []);
 
+    useEffect(() => {
+        socket.on('getAllPosts', (posts) => {
+            setPosts(posts);
+        });
+    }, [posts])
+
     //toggle create thread modal
     function toggleModal(e){
         if(e){
             e.preventDefault();
         }
-        setViewport({
-            latitude: userport.latitude,
-            longitude: userport.longitude,
-            zoom: viewport.zoom,
-        });
+        if(userport){
+            setViewport({
+                latitude: userport.latitude,
+                longitude: userport.longitude,
+                zoom: viewport.zoom,
+            });
+        }
         toggleCreateThreadModal(!createThreadModalVisible)
     }
 
@@ -113,6 +125,16 @@ function MapView(){
     //onclick create post
     function post(e){
         e.preventDefault();
+        socket.emit('postThread', {
+            title,
+            description,
+            creator: "chen",
+            latitude: userport.latitude,
+            longitude: userport.longitude,
+            date: new Date()
+        });
+        toggleCreateThreadModal(false);
+        /*e.preventDefault();
         var request = postRequest(
             createPostQuery(title, description, "chen", userport.latitude, userport.longitude, new Date()),
             "/graphql"
@@ -122,7 +144,7 @@ function MapView(){
                 toggleModal();
                 setPosts(prevPosts => [...prevPosts, data.data.createPost]);
             })
-        });
+        });*/
     }
 
     function getAllPosts(){
@@ -148,7 +170,7 @@ function MapView(){
                     {...viewport}
                     width="100vw"
                     height="100vh"
-                    mapStyle="mapbox://styles/mapbox/outdoors-v11"
+                    mapStyle='mapbox://styles/mapbox/outdoors-v10?optimize=true'
                     mapboxApiAccessToken = {process.env.REACT_APP_MAPBOX_API_KEY}
                     onViewportChange={nextViewport => setViewport(nextViewport)}>
                     <div style={{position: 'absolute', right: 0, bottom: 0}}>
