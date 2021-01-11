@@ -1,10 +1,9 @@
 const Comment = require('../../models/Comment');
-const Post = require('../../models/Post');
 const { transformComment } = require('./transformer');
 
 module.exports = {
     //register single user
-    createComment: async({ description, creator, latitude, longitude, post, parentComment}) => {
+    createComment: async({ description, creator, latitude, longitude, postId, parentComment}) => {
         try{
             const comment = new Comment({
                 description: description,
@@ -12,7 +11,7 @@ module.exports = {
                 latitude: latitude,
                 longitude: longitude,
                 date: new Date(),
-                post: post,
+                post: postId,
                 parentComment: parentComment,
                 childComments: []
             });
@@ -25,7 +24,7 @@ module.exports = {
 
             const createdComment = await comment.save();
 
-            return createdComment;
+            return transformComment(createdComment);
 
         } catch(err){
             throw(err);
@@ -55,5 +54,20 @@ module.exports = {
         } catch(err){
 
         }
-    }
+    },
+
+    getAllRecentComments: async() => {
+        try{
+            var comments = await Comment.find({"date": {
+                "$gte": new Date()- 86400000, //24 hours, begin date
+                "$lt": new Date() //end date
+            }});
+            return comments.map(comment => {
+                return transformComment(comment);
+            });
+
+        } catch(err){
+            throw err;
+        }
+    },
 }

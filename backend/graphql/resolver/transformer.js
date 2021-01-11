@@ -6,7 +6,7 @@ const post = async postId => {
         const post = await Post.findById(postId);
         return{
             ...post._doc,
-            _id: post.id
+            _id: post._id
         }
     } catch(err){
         throw err;

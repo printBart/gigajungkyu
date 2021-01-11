@@ -33,12 +33,13 @@ type RootQuery{
     getAllPosts: [Post]!
     getAllCommentsByPostId(postId: String!): [Comment]!
     getChildCommentsByCommentId(commentId: String!): [Comment]!
+    getAllRecentComments: [Comment]!
 }
 
 type RootMutation{
     registerUser(username: String!): User!
     createPost(title: String!, description: String!, creator: String!, latitude: Float!, longitude: Float!, date: String): Post!
-    createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, post: String!, parentComment: String): Comment!
+    createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
 }
 
 schema {

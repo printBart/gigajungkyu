@@ -37,7 +37,7 @@ export function createCommentQuery(description, creator, latitude, longitude, po
     return{
         query:
         `mutation{
-            createComment(description: "${description}", creator: "${creator}", latitude: ${latitude}, longitude: ${longitude}, post: "${postId}", parentComment: ${parentCommentId}){
+            createComment(description: "${description}", creator: "${creator}", latitude: ${latitude}, longitude: ${longitude}, postId: "${postId}", parentComment: ${parentCommentId}){
                 _id
                 description
                 creator
@@ -46,6 +46,8 @@ export function createCommentQuery(description, creator, latitude, longitude, po
                 date
                 post{
                     _id
+                    title
+                    description
                 }
                 parentComment{
                     _id
@@ -140,6 +142,31 @@ export function getChildCommentsByCommentId(commentId){
                             _id
                         }
                     }
+                }
+            }
+        }`
+    }
+}
+
+export function getAllRecentCommentsQuery(){
+    return{
+        query:
+        `query{
+            getAllRecentComments{
+                _id
+                description
+                creator
+                latitude
+                longitude
+                date
+                post{
+                    _id
+                    title
+                    description
+                    creator
+                    latitude
+                    longitude
+                    date
                 }
             }
         }`

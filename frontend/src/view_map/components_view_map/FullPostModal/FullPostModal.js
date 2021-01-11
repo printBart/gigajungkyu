@@ -50,12 +50,14 @@ function FullPostModal(props){
 
   //onclick create comment
   function createComment(){
+    //props.commentThread(comment, "james", props.postData._id);
     var request = postRequest(
-      createCommentQuery(comment, "james", props.postData.latitude, props.postData.longitude, props.postData._id),
+      createCommentQuery(comment, "james", props.userport.latitude, props.userport.longitude, props.postData._id),
         "/graphql"
     );
     fetch(request).then((response) => {
         response.json().then((data) => {
+          props.commentThread(data.data.createComment);
           setComment('');
           data.data.createComment.layer = 0;
           setComments(oldComments => [...oldComments, data.data.createComment]);
@@ -191,10 +193,12 @@ function FullPostModal(props){
               <FullPostComment 
                 key = {index}
                 data = {comment}
+                userLocation = {props.userport}
                 isHidden = {hiddenComments.indexOf(comment._id)>=0}
                 addNewComment = {addNewComment}
                 hideComments = {hideComments}
-                loadMoreComments = {loadMoreComments}/>
+                loadMoreComments = {loadMoreComments}
+                commentThread = {props.commentThread}/>
             )
           }
         })}

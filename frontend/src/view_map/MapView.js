@@ -13,7 +13,7 @@ import mock_user_data from './mock_user_data.json';
 
 //functions
 import { postRequest } from '../functions_global/request';
-import { createPostQuery, getAllPostsQuery } from '../functions_global/queries';
+import { createPostQuery, getAllPostsQuery, getAllRecentCommentsQuery } from '../functions_global/queries';
 
 //components
 import Emoji from '../components_global/Emoji/Emoji';
@@ -35,6 +35,7 @@ function MapView(){
     const [userport, setUserport] = useState(null);
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [posts, setPosts] = useState(null);
+    const [recentComments, setRecentComments] = useState([]);
 
     //modals
     const [createThreadModalVisible, toggleCreateThreadModal] = useState(false);
@@ -63,6 +64,7 @@ function MapView(){
                 });
             });
             getAllPosts();
+            //getAllRecentComments();
             navigator.geolocation.watchPosition((position) => {
                 setUserport({
                     latitude: position.coords.latitude,
@@ -76,9 +78,19 @@ function MapView(){
 
     useEffect(() => {
         socket.on('getAllPosts', (posts) => {
+            console.log("test");
             setPosts(posts);
         });
-    }, [posts])
+    }, [])
+
+    useEffect(() => {
+        socket.on('displayCreatedComment', (comment) => {
+            setRecentComments(oldArray => [...oldArray, comment]);
+            setTimeout(() =>{
+                setRecentComments(recentComments.filter(recentComment => recentComment._id !== comment._id));
+            }, 5000);
+        })
+    }, [])
 
     //toggle create thread modal
     function toggleModal(e){
@@ -147,6 +159,10 @@ function MapView(){
         });*/
     }
 
+    function commentThread(commentData){
+        socket.emit('commentThread', commentData);
+    }
+
     function getAllPosts(){
         var request = postRequest(
            getAllPostsQuery(),
@@ -159,12 +175,26 @@ function MapView(){
         });
     }
 
+    function getAllRecentComments(){
+        var request = postRequest(
+            getAllRecentCommentsQuery(),
+            "/graphql"
+        );
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                setRecentComments(data.data.getAllRecentComments)
+            })
+        })
+    }
+
     if(userport){
         return(
             <div>
                 {fullPostModalVisible &&
                     <FullPostModal
+                        userport = {userport}
                         toggleModal = {updateFullPostModal}
+                        commentThread = {commentThread}
                         postData = {selectedFullPostModalId}/>}
                 <ReactMapGL
                     {...viewport}
@@ -192,6 +222,24 @@ function MapView(){
                                 </Popup>
                             </div>
                         );
+                    })}
+                    {recentComments && recentComments.map((comment, index) => {
+                        return(
+                            <div key = {index} onClick = {() => updateFullPostModal(comment.post)}>
+                                <Popup
+                                    latitude = {comment.latitude}
+                                    longitude = {comment.longitude}
+                                    closeButton={false}
+                                    dynamicPosition={false}
+                                    anchor="bottom" 
+                                    offsetLeft = {10}
+                                    className = "postPopupContainer">
+                                        <div className = "commentPostMarkerDisplay">{comment.post.title}</div>
+                                        <PostMarker
+                                            postData = {comment}/>
+                                </Popup>
+                            </div>
+                        )
                     })}
                     <Marker
                         latitude = {userport.latitude}

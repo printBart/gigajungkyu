@@ -17,11 +17,12 @@ function FullPostComment(props) {
 
     function createComment(){
         var request = postRequest(
-          createCommentQuery(commentText, "james", props.data.latitude, props.data.longitude, props.data.post._id, props.data._id),
+          createCommentQuery(commentText, "james", props.userLocation.latitude, props.userLocation.longitude, props.data.post._id, props.data._id),
             "/graphql"
         );
         fetch(request).then((response) => {
             response.json().then((data) => {
+                props.commentThread(data.data.createComment);
                 toggleReplyTextareaVisible(!replyTextareaVisible);
                 props.addNewComment(data.data.createComment, props.data.layer);
             })

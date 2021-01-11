@@ -9,7 +9,7 @@ const graphqlResolver = require('./graphql/resolver/index');
 
 const app = express();
 const server = app.listen(8080)
-const io = require('socket.io')(server, {cors: {origin: '*'}});
+const io = require('socket.io')(server, {cors: {origin: '*'}, reconnection:false});
 
 //data size limit to 50mb per request
 app.use(bodyParser.json({limit: '50mb', extended: true}));
@@ -46,11 +46,17 @@ mongoose.connect(
         console.log("User Conntected");
 
         socket.on('postThread', (message) => {
-            graphqlResolver.createPost(message);
-            graphqlResolver.getAllPosts().then(posts => {
-                io.emit('getAllPosts', posts);
+            console.log("post Thread backend");
+            graphqlResolver.createPost(message).then(() => {
+                graphqlResolver.getAllPosts().then(posts => {
+                    io.emit('getAllPosts', posts);
+                });
             });
         });
+
+        socket.on("commentThread", (commentData) => {
+            io.emit('displayCreatedComment', commentData); 
+        })
 
         socket.on('disconnect', () => {
             console.log("disconnected user");
