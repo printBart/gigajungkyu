@@ -2,9 +2,6 @@ import ReactMapGL, { NavigationControl, Marker, Popup, FlyToInterpolator } from 
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-//icons
-import { FiEdit } from 'react-icons/fi';
-
 //css
 import './MapView.css';
 
@@ -13,13 +10,14 @@ import mock_user_data from './mock_user_data.json';
 
 //functions
 import { postRequest } from '../functions_global/request';
-import { createPostQuery, getAllPostsQuery, getAllRecentCommentsQuery } from '../functions_global/queries';
+import { getAllPostsQuery } from '../functions_global/queries';
 
 //components
 import Emoji from '../components_global/Emoji/Emoji';
 import FullPostModal from './components_view_map/FullPostModal/FullPostModal';
 import CreatePostPopup from './components_view_map/CreatePostPopup/CreatePostPopup';
 import PostMarker from './components_view_map/PostMarker/PostMarker';
+import CreatePostIndicator from './components_view_map/CreatePostIndicator/CreatePostIndicator';
 
 let socket;
 
@@ -51,10 +49,19 @@ function MapView(){
 
     //on mount
     useEffect(() => {
-        //socket
+        //set socket
         socket = io('http://localhost:8080');
-        
+        socket.on('getAllPosts', (posts) => {
+            setPosts(posts);
+        });
+        socket.on('displayCreatedComment', (comment) => {
+            setRecentComments(oldArray => [...oldArray, comment]);
+            setTimeout(() =>{
+                setRecentComments(recentComments => recentComments.filter(recentComment => recentComment._id !== comment._id));
+            }, 5000);
+        })
 
+        //set navigation
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition((position) => {
                 setViewport({
@@ -63,8 +70,8 @@ function MapView(){
                     zoom: 13
                 });
             });
+            //get all posts
             getAllPosts();
-            //getAllRecentComments();
             navigator.geolocation.watchPosition((position) => {
                 setUserport({
                     latitude: position.coords.latitude,
@@ -76,21 +83,15 @@ function MapView(){
         }
     }, []);
 
-    useEffect(() => {
-        socket.on('getAllPosts', (posts) => {
-            console.log("test");
-            setPosts(posts);
-        });
-    }, [])
+     //input on change title
+     function onChangeTitle(value){
+        setTitle(value);
+    }
 
-    useEffect(() => {
-        socket.on('displayCreatedComment', (comment) => {
-            setRecentComments(oldArray => [...oldArray, comment]);
-            setTimeout(() =>{
-                setRecentComments(recentComments.filter(recentComment => recentComment._id !== comment._id));
-            }, 5000);
-        })
-    }, [])
+    //input on change title
+    function onChangeDescription(value){
+        setDescription(value);
+    }
 
     //toggle create thread modal
     function toggleModal(e){
@@ -109,7 +110,6 @@ function MapView(){
 
     //toggling full post modal
     function updateFullPostModal(post){
-        //console.log("latitude: " + post.latitude + " longitude: " + post.longitude);
         if(post && post.latitude && post.longitude){
             setViewport({
                 latitude: post.latitude,
@@ -124,16 +124,6 @@ function MapView(){
         toggleFullPostModal(!fullPostModalVisible);
     }
 
-    //input on change title
-    function onChangeTitle(value){
-        setTitle(value);
-    }
-
-    //input on change title
-    function onChangeDescription(value){
-        setDescription(value);
-    }
-
     //onclick create post
     function post(e){
         e.preventDefault();
@@ -146,17 +136,6 @@ function MapView(){
             date: new Date()
         });
         toggleCreateThreadModal(false);
-        /*e.preventDefault();
-        var request = postRequest(
-            createPostQuery(title, description, "chen", userport.latitude, userport.longitude, new Date()),
-            "/graphql"
-        );
-        fetch(request).then((response) => {
-            response.json().then((data) => {
-                toggleModal();
-                setPosts(prevPosts => [...prevPosts, data.data.createPost]);
-            })
-        });*/
     }
 
     function commentThread(commentData){
@@ -173,18 +152,6 @@ function MapView(){
                 setPosts(data.data.getAllPosts);
             })
         });
-    }
-
-    function getAllRecentComments(){
-        var request = postRequest(
-            getAllRecentCommentsQuery(),
-            "/graphql"
-        );
-        fetch(request).then((response) => {
-            response.json().then((data) => {
-                setRecentComments(data.data.getAllRecentComments)
-            })
-        })
     }
 
     if(userport){
@@ -206,7 +173,7 @@ function MapView(){
                     <div style={{position: 'absolute', right: 0, bottom: 0}}>
                         <NavigationControl />
                     </div>
-                    {posts && posts.map((post, index) => {
+                    {posts && posts.map((post, index) => { //all post markers
                         return(
                             <div key = {index} onClick = {() => updateFullPostModal(post)}>
                                 <Popup
@@ -223,7 +190,7 @@ function MapView(){
                             </div>
                         );
                     })}
-                    {recentComments && recentComments.map((comment, index) => {
+                    {recentComments && recentComments.map((comment, index) => { //recent comments
                         return(
                             <div key = {index} onClick = {() => updateFullPostModal(comment.post)}>
                                 <Popup
@@ -257,17 +224,11 @@ function MapView(){
                             anchor="top"
                             offsetTop={25}
                             offsetLeft={10}>
-                            <div
-                                className = "createThreadPopup"
-                                onClick = {toggleModal}>
-                                <FiEdit/> &nbsp;
-                                <b>
-                                    Create Post
-                                </b>
-                            </div>
+                                <CreatePostIndicator
+                                    toggleModal = {toggleModal}/>
                         </Popup>
                     </div>
-                    {createThreadModalVisible &&
+                    {createThreadModalVisible && //create thread
                         <div>
                             <Popup
                             latitude = {userport.latitude}
@@ -277,16 +238,16 @@ function MapView(){
                             anchor="bottom"
                             offsetLeft={10}
                             className = "createPostPopupContainer">
-                            <CreatePostPopup
-                                toggleModal = {toggleModal}
-                                post = {post}
-                                onChangeTitle = {onChangeTitle}
-                                onChangeDescription = {onChangeDescription}/>
-                        </Popup>
+                                <CreatePostPopup
+                                    toggleModal = {toggleModal}
+                                    post = {post}
+                                    onChangeTitle = {onChangeTitle}
+                                    onChangeDescription = {onChangeDescription}/>
+                            </Popup>
                         </div>
                     }
                     
-                    {mock_user_data.map((marker, index) => {
+                    {mock_user_data.map((marker, index) => { //mock data users
                         return(
                             <div
                                 key = {index}
@@ -329,7 +290,7 @@ function MapView(){
                             </div>   
                         )
                     })}
-                    {selectedMarker &&
+                    {selectedMarker && //mock data user popup
                         <Popup
                             latitude = {selectedMarker.latitude}
                             longitude = {selectedMarker.longitude}

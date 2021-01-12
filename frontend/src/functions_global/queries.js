@@ -172,3 +172,17 @@ export function getAllRecentCommentsQuery(){
         }`
     }
 }
+
+export function registerUserQuery(token, email, faculty){
+    return{
+        query:
+        `mutation{
+            registerUser(token: "${token}", email: "${email}", faculty: "${faculty}"){
+                _id
+                token
+                username
+                faculty
+            }
+        }`
+    }
+}

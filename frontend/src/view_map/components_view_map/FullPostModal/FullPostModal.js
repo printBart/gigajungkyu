@@ -46,11 +46,11 @@ function FullPostModal(props){
         sortTraversedComments(data.data.getAllCommentsByPostId);
       })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   //onclick create comment
   function createComment(){
-    //props.commentThread(comment, "james", props.postData._id);
     var request = postRequest(
       createCommentQuery(comment, "james", props.userport.latitude, props.userport.longitude, props.postData._id),
         "/graphql"
@@ -90,6 +90,7 @@ function FullPostModal(props){
 
   useEffect(() => {
     sortTraversedComments(treeComments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hiddenComments])
 
   function sortTraversedComments(nodes){
@@ -200,6 +201,9 @@ function FullPostModal(props){
                 loadMoreComments = {loadMoreComments}
                 commentThread = {props.commentThread}/>
             )
+          }
+          else{
+            return null;
           }
         })}
       </div>

@@ -3,7 +3,10 @@ module.exports = buildSchema(`
 
 type User{
     _id: ID!
+    token: String!
+    email: String!
     username: String!
+    faculty: String
 }
 
 type Post{
@@ -37,7 +40,7 @@ type RootQuery{
 }
 
 type RootMutation{
-    registerUser(username: String!): User!
+    registerUser(token: String!, email: String!, faculty: String):  User!
     createPost(title: String!, description: String!, creator: String!, latitude: Float!, longitude: Float!, date: String): Post!
     createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
 }

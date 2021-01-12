@@ -28,18 +28,7 @@
     background: white;
     width: 350px;
 }
-/*.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-    border-right-color: #8B5D33 !important;
-}
-.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-    border-left-color: #8B5D33 !important;
-}*/
 
-.createThreadPopup{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .commentPostMarkerDisplay{
     position: absolute;
     bottom: 60%;
