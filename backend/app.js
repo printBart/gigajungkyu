@@ -10,6 +10,7 @@ const graphqlResolver = require('./graphql/resolver/index');
 const app = express();
 const server = app.listen(8080)
 const io = require('socket.io')(server, {cors: {origin: '*'}, reconnection:false});
+var onlineUsers = [];
 
 //data size limit to 50mb per request
 app.use(bodyParser.json({limit: '50mb', extended: true}));
@@ -56,11 +57,31 @@ mongoose.connect(
 
         socket.on("commentThread", (commentData) => {
             io.emit('displayCreatedComment', commentData); 
-        })
+        });
+
+        socket.on("sendUserLocation", (userLocationData) => {
+            var userMovedIndex = onlineUsers.findIndex(user => user.token === userLocationData.userToken);
+            if(userMovedIndex>-1){
+                onlineUsers[userMovedIndex].longitude = userLocationData.longitude;
+                onlineUsers[userMovedIndex].latitude = userLocationData.latitude;
+                io.emit("displayCurrentUsers", onlineUsers);
+            }
+            else{
+                graphqlResolver.getUserByToken({token: userLocationData.userToken}).then((user) => {
+                    const userData = {
+                        ...user._doc,
+                        longitude: userLocationData.longitude,
+                        latitude: userLocationData.latitude
+                    }
+                    onlineUsers.push(userData);
+                    io.emit("displayCurrentUsers", onlineUsers);
+                });
+            }
+        });
 
         socket.on('disconnect', () => {
             console.log("disconnected user");
-        })
+        });
     });
     
 }).catch(err => {

@@ -13,7 +13,7 @@ type Post{
     _id: ID!
     title: String!
     description: String!
-    creator: String!
+    creator: String
     latitude: Float!
     longitude: Float!
     date: String
@@ -22,7 +22,7 @@ type Post{
 type Comment{
     _id: ID!
     description: String!
-    creator: String!
+    creator: String
     latitude: Float!
     longitude: Float!
     date: String
@@ -32,7 +32,7 @@ type Comment{
 }
 
 type RootQuery{
-    getUserByUsername(usernname: String!): User
+    getUserByToken(token: String!): User!
     getAllPosts: [Post]!
     getAllCommentsByPostId(postId: String!): [Comment]!
     getChildCommentsByCommentId(commentId: String!): [Comment]!
@@ -41,8 +41,8 @@ type RootQuery{
 
 type RootMutation{
     registerUser(token: String!, email: String!, faculty: String):  User!
-    createPost(title: String!, description: String!, creator: String!, latitude: Float!, longitude: Float!, date: String): Post!
-    createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
+    createPost(title: String!, description: String!, creator: String, latitude: Float!, longitude: Float!, date: String): Post!
+    createComment(description: String!, creator: String, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
 }
 
 schema {

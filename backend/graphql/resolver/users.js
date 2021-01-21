@@ -12,8 +12,6 @@ module.exports = {
                     break;
                 }
             }
-            
-            console.log(username);
 
             const user = new User({
                 token: token,
@@ -30,4 +28,14 @@ module.exports = {
             throw(err);
         }
     },
+
+    getUserByToken: async({ token }) => {
+        try{
+            const user = await User.findOne({token: token});
+            return user;
+
+        } catch(err){
+            throw(err);
+        }
+    }
 }
