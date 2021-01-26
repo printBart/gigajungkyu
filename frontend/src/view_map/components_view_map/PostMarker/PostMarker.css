@@ -22,11 +22,20 @@
 }
 .postMarkerHeader{
     display: flex;
-    opacity: 0.5;
+    align-items: center;
     font-size: 12px;
 }
 .postMarkerCreator{
+    opacity: 0.5;
     margin-right: 10px;
+}
+.postMarkerDate{
+    opacity: 0.5;
+    margin-right: 10px;
+}
+.isNightmodePost{
+    position: absolute;
+    opacity: 1;
 }
 .postMarkerTitle{
     font-weight: 600;

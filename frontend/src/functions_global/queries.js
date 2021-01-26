@@ -23,10 +23,15 @@ export function getAllPostsQuery(){
                 _id
                 title
                 description
-                creator
+                creator{
+                    _id
+                    username
+                }
                 latitude
                 longitude
+                emoji
                 date
+                isNightmode
             }
         }`
     }
@@ -40,7 +45,10 @@ export function createCommentQuery(description, creator, latitude, longitude, po
             createComment(description: "${description}", creator: "${creator}", latitude: ${latitude}, longitude: ${longitude}, postId: "${postId}", parentComment: ${parentCommentId}){
                 _id
                 description
-                creator
+                creator{
+                    _id
+                    username
+                }
                 latitude
                 longitude
                 date
@@ -67,7 +75,10 @@ export function getAllCommentsByPostIdQuery(postId){
             getAllCommentsByPostId(postId: "${postId}"){
                 _id
                 description
-                creator
+                creator{
+                    _id
+                    username
+                }
                 latitude
                 longitude
                 date
@@ -77,7 +88,10 @@ export function getAllCommentsByPostIdQuery(postId){
                 childComments{
                     _id
                     description
-                    creator
+                    creator{
+                        _id
+                        username
+                    }
                     latitude
                     longitude
                     date
@@ -87,7 +101,10 @@ export function getAllCommentsByPostIdQuery(postId){
                     childComments{
                         _id
                         description
-                        creator
+                        creator{
+                            _id
+                            username
+                        }
                         latitude
                         longitude
                         date
@@ -111,7 +128,10 @@ export function getChildCommentsByCommentId(commentId){
             getChildCommentsByCommentId(commentId: "${commentId}"){
                 _id
                 description
-                creator
+                creator{
+                    _id
+                    username
+                }
                 latitude
                 longitude
                 date
@@ -121,7 +141,10 @@ export function getChildCommentsByCommentId(commentId){
                 childComments{
                     _id
                     description
-                    creator
+                    creator{
+                        _id
+                        username
+                    }
                     latitude
                     longitude
                     date
@@ -131,7 +154,10 @@ export function getChildCommentsByCommentId(commentId){
                     childComments{
                         _id
                         description
-                        creator
+                        creator{
+                            _id
+                            username
+                        }
                         latitude
                         longitude
                         date
@@ -155,7 +181,10 @@ export function getAllRecentCommentsQuery(){
             getAllRecentComments{
                 _id
                 description
-                creator
+                creator{
+                    _id
+                    username
+                }
                 latitude
                 longitude
                 date
@@ -163,7 +192,10 @@ export function getAllRecentCommentsQuery(){
                     _id
                     title
                     description
-                    creator
+                    creator{
+                        _id
+                        username
+                    }
                     latitude
                     longitude
                     date
@@ -180,6 +212,21 @@ export function registerUserQuery(token, email, faculty){
             registerUser(token: "${token}", email: "${email}", faculty: "${faculty}"){
                 _id
                 token
+                username
+                faculty
+            }
+        }`
+    }
+}
+
+export function getUserByTokenQuery(token){
+    return{
+        query:
+        `query{
+            getUserByToken(token: "${token}"){
+                _id
+                token
+                email
                 username
                 faculty
             }

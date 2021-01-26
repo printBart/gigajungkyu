@@ -23,6 +23,9 @@
     display: flex;
     flex-direction: column;
 }
+.createPostPopupInputsHeader{
+    display: flex;
+}
 .createPostTitleInput{
     border: none;
     font-weight: 600;

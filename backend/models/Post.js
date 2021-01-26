@@ -12,8 +12,8 @@ const postSchema = new Schema({
         required: true,
     },
     creator: {
-        type: String,
-        required: false,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
     },
     latitude:{
         type: Number,
@@ -23,10 +23,18 @@ const postSchema = new Schema({
         type: Number,
         required: true,
     },
+    emoji: {
+        type: String,
+        required: false,
+    },
     date: {
         type: Date,
         required: false,
     },
+    isNightmode: {
+        type: Boolean,
+        required: false,
+    }
 });
 
 module.exports = mongoose.model('Post', postSchema);

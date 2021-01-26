@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import app from '../../../../base';
 
 //css
 import './FullPostComment.css';
@@ -17,7 +18,7 @@ function FullPostComment(props) {
 
     function createComment(){
         var request = postRequest(
-          createCommentQuery(commentText, "james", props.userLocation.latitude, props.userLocation.longitude, props.data.post._id, props.data._id),
+          createCommentQuery(commentText, app.auth().currentUser.uid, props.userLocation.latitude, props.userLocation.longitude, props.data.post._id, props.data._id),
             "/graphql"
         );
         fetch(request).then((response) => {
@@ -40,7 +41,7 @@ function FullPostComment(props) {
                 </div>
                 <div className = "fullBodyPostModal">
                     <div className = "fullBodyPostModalHeader">
-                        <i className = "fulBodyPostModalUsername">{props.data.creator}</i>
+                        <i className = "fulBodyPostModalUsername">{props.data.creator.username}</i>
                         <div className = "fullBodyPostModalTimestamp">{convertDeltaMilisToTime(props.data.date)} ago</div>
                     </div>
                     <div className = "fullBodyPostModalDescription">
@@ -84,7 +85,7 @@ function FullPostComment(props) {
                 </div>
                 <div className = "fullBodyPostModal">
                     <div className = "fullBodyPostModalHeader">
-                        <i className = "fulBodyPostModalUsername">{props.data.creator}</i>
+                        <i className = "fulBodyPostModalUsername">{props.data.creator.username}</i>
                         <div className = "fullBodyPostModalTimestamp">{convertDeltaMilisToTime(props.data.date)} ago</div>
                     </div>
                 </div>

@@ -8,11 +8,12 @@ function RegisterView() {
 
   async function handleSignUp(event) {
     event.preventDefault();
-    const { email, password, username } = event.target.elements;
+    const { email, password } = event.target.elements;
     try {
       await app
         .auth()
-        .createUserWithEmailAndPassword(email.value, password.value).then(() => {
+        .createUserWithEmailAndPassword(email.value, password.value).then((user) => {
+          console.log(user);
           registerUser(email.value);
         });
     } catch (error) {
@@ -21,17 +22,16 @@ function RegisterView() {
   }
 
   function registerUser(email){
-    app.auth().currentUser.getIdToken(true).then( (token) => {
-      const request = postRequest(
-        registerUserQuery(token, email, "Engineering"),
-        "/graphql"
-      );
-      fetch(request).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-        })
-      });
-    })
+    let token = app.auth().currentUser.uid
+    const request = postRequest(
+      registerUserQuery(token, email, "engineering"),
+      "/graphql"
+    );
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+      })
+    });
   }
  
   return(

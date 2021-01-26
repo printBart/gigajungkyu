@@ -8,8 +8,8 @@ const postSchema = new Schema({
         required: true,
     },
     creator: {
-        type: String,
-        required: false,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
     },
     latitude:{
         type: Number,

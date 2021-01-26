@@ -14,12 +14,10 @@ function LoginView() {
         await app
           .auth()
           .signInWithEmailAndPassword(email.value, password.value).then(user => {
-            return app.auth().currentUser.getIdToken(true).then( (token) => {
-              console.log(token);
-              document.cookie = '__sessionU=' + token + ';max-age=3600';
+            console.log(user.user.uid);
+              document.cookie = '__sessionU=' + user.user.uid + ';max-age=3600';
               history.push("/map");
 
-            })
           }).catch((err) => {
             console.log(err);
           });

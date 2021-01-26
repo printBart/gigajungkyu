@@ -1,16 +1,20 @@
 const Post = require('../../models/Post');
+const User = require('../../models/User');
 
 module.exports = {
     //create post
-    createPost: async({ title, description, creator, latitude, longitude, date }) => {
+    createPost: async({ title, description, creator, latitude, longitude, emoji, date, isNightmode }) => {
         try{
+            const creatorObj = await User.findOne({token: creator});
             const post = new Post({
                 title: title,
                 description: description,
-                creator: creator,
+                creator: creatorObj,
                 latitude: latitude,
                 longitude: longitude,
-                date: date,
+                emoji,
+                date: new Date(),
+                isNightmode: isNightmode
             });
             const createdPost = await post.save();
 
@@ -22,7 +26,7 @@ module.exports = {
 
     getAllPosts: async() => {
         try{
-            var posts = await Post.find();
+            const posts = await Post.find().populate('creator');
             return posts;
 
         } catch(err){

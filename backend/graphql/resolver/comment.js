@@ -1,13 +1,15 @@
 const Comment = require('../../models/Comment');
+const User = require('../../models/User');
 const { transformComment } = require('./transformer');
 
 module.exports = {
     //register single user
     createComment: async({ description, creator, latitude, longitude, postId, parentComment}) => {
         try{
+            const creatorObj = await User.findOne({token: creator});
             const comment = new Comment({
                 description: description,
-                creator: creator,
+                creator: creatorObj,
                 latitude: latitude,
                 longitude: longitude,
                 date: new Date(),

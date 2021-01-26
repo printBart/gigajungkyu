@@ -1,4 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react';
+//firebase
+import app from "../../../base";
 
 //css
 import './FullPostModal.css';
@@ -52,7 +54,7 @@ function FullPostModal(props){
   //onclick create comment
   function createComment(){
     var request = postRequest(
-      createCommentQuery(comment, "james", props.userport.latitude, props.userport.longitude, props.postData._id),
+      createCommentQuery(comment, app.auth().currentUser.uid, props.userport.latitude, props.userport.longitude, props.postData._id),
         "/graphql"
     );
     fetch(request).then((response) => {
@@ -155,7 +157,7 @@ function FullPostModal(props){
           </div>
           <div className = "fullBodyPostModal">
             <div className = "fullBodyPostModalHeader">
-              <i className = "fulBodyPostModalUsername">{props.postData.creator}</i>
+              <i className = "fulBodyPostModalUsername">{props.postData.creator.username}</i>
               <div className = "fullBodyPostModalTimestamp">{convertDeltaMilisToTime(props.postData.date)} ago</div>
             </div>
             <div className = "fullBodyPostModalTitle">
