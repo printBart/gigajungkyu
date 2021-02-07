@@ -4,3 +4,4 @@ nodemon.json
 .env
 .eslintcache
 base.js
+token.json

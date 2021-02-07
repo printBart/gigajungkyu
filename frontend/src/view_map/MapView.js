@@ -68,10 +68,12 @@ function MapView(){
             setPosts(posts);
         });
         socket.on('displayCreatedComment', (comment) => {
-            setRecentComments(oldArray => [...oldArray, comment]);
-            setTimeout(() =>{
-                setRecentComments(recentComments => recentComments.filter(recentComment => recentComment._id !== comment._id));
-            }, 5000);
+            if(!isNightmode()){
+                setRecentComments(oldArray => [...oldArray, comment]);
+                setTimeout(() =>{
+                    setRecentComments(recentComments => recentComments.filter(recentComment => recentComment._id !== comment._id));
+                }, 5000);
+            }
         })
 
         socket.on('displayCurrentUsers', (onlineUsers) => {
@@ -86,6 +88,10 @@ function MapView(){
                     longitude: position.coords.longitude,
                     zoom: 13
                 });
+                setCreateThreadMarker({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                })
             });
             //get all posts
             getAllPosts();
@@ -186,7 +192,6 @@ function MapView(){
         );
         fetch(request).then((response) => {
             response.json().then((data) => {
-                console.log(data);
                 setPosts(data.data.getAllPosts);
             })
         });
@@ -272,47 +277,52 @@ function MapView(){
                         )
                     })}
                     {currentUsers.map((user, index) => { //current users
-                        return(
-                            <div
-                                key = {index}
-                                onClick = {e => {
-                                    e.preventDefault();
-                                    setSelectedMarker(user);
-                                    setViewport({
-                                        longitude: user.longitude,
-                                        latitude: user.latitude,
-                                        transitionDuration: 500,
-                                        transitionInterpolator: new FlyToInterpolator(),
-                                        zoom: viewport.zoom
-                                    });
-                                }}>
-                            <Marker
-                                key = {user._id}
-                                longitude = {user.longitude}
-                                latitude = {user.latitude}>
-                                    {user.faculty === "engineering" ?
-                                        <Emoji
-                                            symbol = "🐻"
-                                            label = "engineering"/>:
-                                    user.faculty === "business" ? 
-                                        <Emoji
-                                            symbol = "🐍"
-                                            label = "business" />:
-                                    user.faculty === "arts" ?
-                                        <Emoji
-                                            symbol = "🐶"
-                                            label = "arts" />:
-                                    user.faculty === "forestry" ? 
-                                        <Emoji
-                                            symbol = "🐢"
-                                            label = "forestry" />:
-                                        <Emoji
-                                            symbol = "🦦"
-                                            label = "other" />
-                                    }
-                            </Marker>
-                            </div>
-                        )
+                        if(isNightmode() && user.token === app.auth().currentUser.uid || !isNightmode()){
+                            return(
+                                <div
+                                    key = {index}
+                                    onClick = {e => {
+                                        e.preventDefault();
+                                        setSelectedMarker(user);
+                                        setViewport({
+                                            longitude: user.longitude,
+                                            latitude: user.latitude,
+                                            transitionDuration: 500,
+                                            transitionInterpolator: new FlyToInterpolator(),
+                                            zoom: viewport.zoom
+                                        });
+                                    }}>
+                                <Marker
+                                    key = {user._id}
+                                    longitude = {user.longitude}
+                                    latitude = {user.latitude}>
+                                        {user.faculty === "engineering" ?
+                                            <Emoji
+                                                symbol = "🐻"
+                                                label = "engineering"/>:
+                                        user.faculty === "business" ? 
+                                            <Emoji
+                                                symbol = "🐍"
+                                                label = "business" />:
+                                        user.faculty === "arts" ?
+                                            <Emoji
+                                                symbol = "🐶"
+                                                label = "arts" />:
+                                        user.faculty === "forestry" ? 
+                                            <Emoji
+                                                symbol = "🐢"
+                                                label = "forestry" />:
+                                            <Emoji
+                                                symbol = "🦦"
+                                                label = "other" />
+                                        }
+                                </Marker>
+                                </div>
+                            )
+                        }
+                        else{
+                            return null;
+                        }
                     })}
                     <div className = "createThreadPopupContainer">
                         <Popup
@@ -339,7 +349,7 @@ function MapView(){
                                 offsetTop = {-230}
                                 draggable
                                 onDragEnd = {onCreateThreadMarkerDragEnd}
-                                className = "createPostPopupContainer">
+                                className = "nightmodeCreatThreadPopupContainer">
                                     <CreatePostPopup
                                         emoji = {emoji}
                                         setEmoji = {setEmoji}

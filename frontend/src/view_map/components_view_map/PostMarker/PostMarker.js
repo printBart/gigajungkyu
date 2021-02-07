@@ -15,7 +15,6 @@ import Emoji from '../../../components_global/Emoji/Emoji';
 import { convertStringtoEmoji } from '../../../functions_global/emoji';
 
 function PostMarker(props) {
-    console.log(props.postData);
     return (
     <div className = "postMarker">
         <div className = "postMakerSideContainer">
@@ -43,8 +42,8 @@ function PostMarker(props) {
             <div className = "postMarkerTitle">
                 <Emoji
                     symbol = {convertStringtoEmoji(props.postData.emoji)}
-                    label = {props.postData.emoji}/> &nbsp;
-                {props.postData.title}
+                    label = {props.postData.emoji}/>
+                {props.postData.title && " " + props.postData.title}
             </div>
             <div className = "postMarkerDescription">
                 {props.postData.description}

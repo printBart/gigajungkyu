@@ -14,7 +14,6 @@ function LoginView() {
         await app
           .auth()
           .signInWithEmailAndPassword(email.value, password.value).then(user => {
-            console.log(user.user.uid);
               document.cookie = '__sessionU=' + user.user.uid + ';max-age=3600';
               history.push("/map");
 

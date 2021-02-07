@@ -29,5 +29,6 @@ export function convertDeltaMilisToTime(date){
 }
 
 export function isNightmode(){
-    return new Date().getHours() >= 20 || new Date().getHours() <= 8;
+    //return new Date().getHours() >= 20 || new Date().getHours() <= 8;
+    return true;
 }
