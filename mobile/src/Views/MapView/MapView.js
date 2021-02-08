@@ -1,20 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Modal,
-  Text,
-  TextInput,
   TouchableOpacity,
-  SafeAreaView,
-  KeyboardAvoidingView
 } from 'react-native';
 
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import token from '../../token.json';
+import token from '../../../token.json';
 
 //components
-import PostButton from '../GlobalComponents/PostButton';
+import PostButton from '../../GlobalComponents/PostButton';
+import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -35,7 +31,7 @@ const styles = StyleSheet.create({
   },
   postModal: {
     backgroundColor: "white",
-    flex: 2.2,
+    flex: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     //shadow
@@ -52,6 +48,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    alignItems: "center",
     justifyContent: 'space-between',
     padding: 10,
     paddingHorizontal: 20,
@@ -62,15 +59,28 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   postBtn: {
+    backgroundColor: "#7367FF",
+    color: "white",
+    padding: 5,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+  },
+  postBtnText: {
+    color: "white",
     fontSize: 20,
     fontWeight: "bold",
   },
   body: {
     flex: 1,
   },
+  titleContainer:{
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    paddingRight: 35,
+  },
   title: {
     fontSize: 25,
-    padding: 20,
     fontWeight: "bold",
   },
   description: {
@@ -84,8 +94,7 @@ const styles = StyleSheet.create({
 const MapView = () => {
   const [currentLocation, setCurrentLocation] = useState({});
   const [displayThread, setDisplayThread] = useState(false);
-  const [title, onChangeTitle] = React.useState("");
-  const [description, onChangeDescription] = React.useState("");
+
   
   return (
     <View style={styles.page}>
@@ -93,7 +102,7 @@ const MapView = () => {
         <MapboxGL.MapView
           style={styles.map}>
             <MapboxGL.Camera
-              zoomLevel = {16}
+              zoomLevel = {13}
               animationMode ={'flyTo'}
               animationDuration = {0}
               followUserLocation = {true}>
@@ -103,43 +112,9 @@ const MapView = () => {
               onUpdate = {(userLocation) => console.log(userLocation)}/>
           </MapboxGL.MapView>
       </View>
-
-      <Modal
-          animationType="slide"
-          transparent={true}
-          visible={displayThread}>
-        <View style = {{flex: 1}}></View>
-        <KeyboardAvoidingView style = {styles.postModal}>
-          <SafeAreaView style = {{flex: 1}}>
-            <View style ={styles.header}>
-            <TouchableOpacity
-              onPress={() => setDisplayThread(false)}>
-              <Text style = {styles.cancelBtn}>Cancel</Text>
-            </TouchableOpacity>
-              <Text style = {styles.postBtn}>Post</Text>
-            </View>
-            <View style = {styles.body}>
-              <TextInput
-                style={styles.title}
-                onChangeText={text => onChangeTitle(text)}
-                value={title}
-                placeholder = {"Title"}
-                autoFocus={true}
-              />
-              <TextInput
-                style = {styles.description}
-                multiline={true}
-                numberOfLines={4}
-                onChangeText={(text) => onChangeDescription({text})}
-                value={description}
-                placeholder = "Write something ...."
-              />
-            </View>
-          </SafeAreaView>
-        </KeyboardAvoidingView>
-        <View style = {{flex: 2}}></View>
-      </Modal>
-
+      <CreateThreadModal
+        displayThread = {displayThread}
+        setDisplayThread = {setDisplayThread}/>
 
       <TouchableOpacity
         onPress={() => setDisplayThread(true)}>

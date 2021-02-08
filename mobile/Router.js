@@ -1,13 +1,12 @@
 import React from 'react';
-import {
-  StyleSheet,
-} from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MapView from './src/Views/MapView';
-import ThreadView from './src/Views/ThreadView';
+
+//components
+import MapView from './src/Views/MapView/MapView';
+import ThreadView from './src/Views/ThreadView/ThreadView';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,15 +17,15 @@ const Router = () => {
         options = {{
           tabBarLabel: 'Map',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="map" color={color} size={size} />
+            <Icon name="map-pin" color={color} size={size} />
           ),
         }}/>
       <Tab.Screen
       name="Profile" component={ThreadView}
       options = {{
-        tabBarLabel: 'Profile',
+        tabBarLabel: 'Thread',
         tabBarIcon: ({ color, size }) => (
-          <Icon name="user" color={color} size={size} />
+          <Icon name="th-list" color={color} size={size} />
         ),
       }}/>
     </Tab.Navigator>

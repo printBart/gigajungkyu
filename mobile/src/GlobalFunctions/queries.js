@@ -1,0 +1,74 @@
+export function getAllPostsQuery(){
+    return{
+        query:
+        `query{
+            getAllPosts{
+                _id
+                title
+                description
+                creator{
+                    _id
+                    username
+                }
+                latitude
+                longitude
+                emoji
+                date
+                isNightmode
+            }
+        }`
+    }
+}
+
+export function getAllCommentsByPostIdQuery(postId){
+    return{
+        query:
+        `query{
+            getAllCommentsByPostId(postId: "${postId}"){
+                _id
+                description
+                creator{
+                    _id
+                    username
+                }
+                latitude
+                longitude
+                date
+                post{
+                    _id
+                }
+                childComments{
+                    _id
+                    description
+                    creator{
+                        _id
+                        username
+                    }
+                    latitude
+                    longitude
+                    date
+                    post{
+                        _id
+                    }
+                    childComments{
+                        _id
+                        description
+                        creator{
+                            _id
+                            username
+                        }
+                        latitude
+                        longitude
+                        date
+                        post{
+                            _id
+                        }
+                        childComments{
+                            _id
+                        }
+                    }
+                }
+            }
+        }`
+    }
+}
