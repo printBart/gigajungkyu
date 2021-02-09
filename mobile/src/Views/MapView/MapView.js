@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 
 import MapboxGL from "@react-native-mapbox-gl/maps";
@@ -92,15 +93,18 @@ const styles = StyleSheet.create({
 
 
 const MapView = () => {
-  const [currentLocation, setCurrentLocation] = useState({});
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
+
+  console.log(currentLocation);
 
   
   return (
     <View style={styles.page}>
       <View style={styles.container}>
         <MapboxGL.MapView
-          style={styles.map}>
+          style={styles.map}
+          styleURL = {'mapbox://styles/mapbox/outdoors-v10?optimize=true'}>
             <MapboxGL.Camera
               zoomLevel = {13}
               animationMode ={'flyTo'}
@@ -108,8 +112,21 @@ const MapView = () => {
               followUserLocation = {true}>
             </MapboxGL.Camera>
             <MapboxGL.UserLocation
-              visible = {true}
-              onUpdate = {(userLocation) => console.log(userLocation)}/>
+              visible = {false}
+              onUpdate = {(userLocation) => 
+              (currentLocation === null || userLocation.timestamp - currentLocation.timestamp < 1) && setCurrentLocation(userLocation)}/>
+       
+              {currentLocation &&
+              <MapboxGL.PointAnnotation
+                key="pointAnnotation"
+                id="pointAnnotation"
+                tracksViewChanges={false}
+                coordinate={[currentLocation.coords.longitude, currentLocation.coords.latitude]}>
+                <TouchableOpacity style = {{alignItems: "center"}}>
+                  <Text style = {{fontSize: 15, position: 'absolute', top: -5, zIndex: 2}}>👑</Text>
+                  <Text style = {{fontSize: 30}}>🐶</Text>
+                </TouchableOpacity>
+              </MapboxGL.PointAnnotation>}
           </MapboxGL.MapView>
       </View>
       <CreateThreadModal

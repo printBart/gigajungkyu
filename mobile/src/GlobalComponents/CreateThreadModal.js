@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: 'space-between',
       padding: 10,
-      paddingHorizontal: 20,
+      paddingHorizontal: 15,
     },
     cancelBtn: {
       fontSize: 20,
