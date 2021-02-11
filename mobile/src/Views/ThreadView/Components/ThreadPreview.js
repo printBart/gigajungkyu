@@ -60,7 +60,9 @@ const styles = StyleSheet.create({
     }
 });
 
+
 const ThreadPreview = (props) => {
+    console.log(props);
     return (
         <TouchableOpacity style = {styles.threadPreview} onPress =  {() => props.setSelectedThread(props.post)}>
             <View style = {styles.voteContainer}>

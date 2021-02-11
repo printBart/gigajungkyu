@@ -46,18 +46,25 @@ mongoose.connect(
     io.on("connection", (socket)=>{
         console.log("User Conntected");
 
-        socket.on('postThread', (message) => {
+        /*socket.on('postThread', (message) => {
             console.log("post Thread backend");
             graphqlResolver.createPost(message).then(() => {
                 graphqlResolver.getAllPosts().then(posts => {
                     io.emit('getAllPosts', posts);
                 });
             });
-        });
+        });*/
 
         socket.on("commentThread", (commentData) => {
             io.emit('displayCreatedComment', commentData); 
         });
+
+        socket.on("postThread", (thread) => {
+            console.log(thread);
+            graphqlResolver.getAllRecentPosts().then((posts) => {
+                io.emit("displayLivePosts", posts);
+            })
+        })
 
         socket.on("sendUserLocation", (userLocationData) => {
             var userMovedIndex = onlineUsers.findIndex(user => user.token === userLocationData.userToken);

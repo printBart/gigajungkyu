@@ -6,12 +6,16 @@ import {
   Text,
 } from 'react-native';
 
+import Geolocation from '@react-native-community/geolocation';
 import MapboxGL from "@react-native-mapbox-gl/maps";
+import io from "socket.io-client";
+
 import token from '../../../token.json';
 
 //components
 import PostButton from '../../GlobalComponents/PostButton';
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
+import ThreadPreview from './Components/ThreadPreview';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -88,15 +92,41 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     fontSize: 20,
+  },
+  postBubble: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
   }
 });
 
+let socket;
 
 const MapView = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
+  const [livePosts, setLivePosts] = useState([]);
 
-  console.log(currentLocation);
+
+  useEffect(() => {
+    socket = io('http://192.168.1.21:8080');
+
+    socket.on('displayLivePosts', (livePosts) => {
+      setLivePosts(livePosts);
+    })
+    Geolocation.watchPosition(
+      (position) => {setCurrentLocation(position)},
+      (error) => {console.log(error.code, error.message);},
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 50 });
+  }, []);
+
+  const emitThread = (thread) => {
+    setDisplayThread(false);
+    socket.emit('postThread', thread);
+  }
+
+  console.log(currentLocation && currentLocation.coords);
+  console.log(livePosts);
 
   
   return (
@@ -104,17 +134,16 @@ const MapView = () => {
       <View style={styles.container}>
         <MapboxGL.MapView
           style={styles.map}
-          styleURL = {'mapbox://styles/mapbox/outdoors-v10?optimize=true'}>
+          styleURL = {'mapbox://styles/mapbox/outdoors-v10?optimize=true'}
+          pitchEnabled = {false}
+          rotateEnabled = {false}>
             <MapboxGL.Camera
               zoomLevel = {13}
+              maxZoomLevel = {16}
               animationMode ={'flyTo'}
-              animationDuration = {0}
+              animationDuration = {1000}
               followUserLocation = {true}>
             </MapboxGL.Camera>
-            <MapboxGL.UserLocation
-              visible = {false}
-              onUpdate = {(userLocation) => 
-              (currentLocation === null || userLocation.timestamp - currentLocation.timestamp < 1) && setCurrentLocation(userLocation)}/>
        
               {currentLocation &&
               <MapboxGL.PointAnnotation
@@ -127,11 +156,27 @@ const MapView = () => {
                   <Text style = {{fontSize: 30}}>🐶</Text>
                 </TouchableOpacity>
               </MapboxGL.PointAnnotation>}
+              {livePosts.map((post) => {
+                return(
+                  <MapboxGL.PointAnnotation
+                    key = {post._id}
+                    id = {post._id}
+                    tracksViewChanges={false}
+                    coordinate={[post.latitude, post.longitude]}
+                    anchor = {{x: 0.5, y: 2}}
+                    >
+                      <ThreadPreview
+                        post = {post}/>
+                  </MapboxGL.PointAnnotation>
+                )
+              })}
           </MapboxGL.MapView>
       </View>
       <CreateThreadModal
         displayThread = {displayThread}
-        setDisplayThread = {setDisplayThread}/>
+        currentLocation = {currentLocation}
+        setDisplayThread = {setDisplayThread}
+        emitThread = {emitThread}/>
 
       <TouchableOpacity
         onPress={() => setDisplayThread(true)}>

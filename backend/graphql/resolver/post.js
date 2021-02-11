@@ -1,9 +1,10 @@
+const { PossibleTypeExtensionsRule } = require('graphql');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 
 module.exports = {
     //create post
-    createPost: async({ title, description, creator, latitude, longitude, emoji, date, isNightmode }) => {
+    createPost: async({ title, description, creator, latitude, longitude, emoji, isNightmode }) => {
         try{
             const creatorObj = await User.findOne({token: creator});
             const post = new Post({
@@ -33,4 +34,16 @@ module.exports = {
             throw err;
         }
     },
+
+    getAllRecentPosts: async() => {
+        try{
+            var posts = await Post.find({"date": {
+                "$gte": new Date()- 86400000, //24 hours, begin date
+                "$lt": new Date() //end date
+            }}).populate('creator');
+            return posts;
+        } catch(err){
+            throw err;
+        }
+    }
 }

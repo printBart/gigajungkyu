@@ -9,6 +9,8 @@ import {
     KeyboardAvoidingView,
     SafeAreaView
 } from 'react-native';
+import { createPostQuery } from '../GlobalFunctions/queries';
+import { postRequest } from '../GlobalFunctions/request';
 
 import EmojiSelector from './EmojiSelector';
 
@@ -75,64 +77,78 @@ const styles = StyleSheet.create({
 });
 
 const CreateThreadModal = (props) => {
-    const [title, onChangeTitle] = React.useState("");
-    const [description, onChangeDescription] = React.useState("");
-    const [currentEmoji, setCurrentEmoji] = React.useState("😀");
+  const [title, onChangeTitle] = React.useState("");
+  const [description, onChangeDescription] = React.useState("");
+  const [currentEmoji, setCurrentEmoji] = React.useState("😀");
 
-    const postThread = () => {
-        console.log(currentEmoji);
-        console.log(title);
-        console.log(description);
-        props.setDisplayThread(false);
-      }
-
-    return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={props.displayThread}>
-        <KeyboardAvoidingView style = {{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "height"}>
-            <TouchableOpacity style = {{flex: 1,}} onPress={() => props.setDisplayThread(false)}>
-            </TouchableOpacity>
-            <EmojiSelector
-                setCurrentEmoji = {setCurrentEmoji}/>
-            <View style = {styles.postModal}>
-              <SafeAreaView style = {{flex: 1}}>
-                <View style = {styles.body}>
-                <View style = {styles.titleContainer}>
-                    <Text style = {{paddingRight: 5, fontSize: 30}}>{currentEmoji}</Text>
-                    <TextInput
-                    style={styles.title}
-                    onChangeText={text => onChangeTitle(text)}
-                    value={title}
-                    placeholder = {"Title"}
-                    autoFocus={true}
-                    />
-                </View>
-                <TextInput
-                    style = {styles.description}
-                    multiline={true}
-                    numberOfLines={4}
-                    onChangeText={(text) => onChangeDescription(text)}
-                    value={description}
-                    placeholder = "Write something ...."
-                />
-                </View>
-                <View style ={styles.header}>
-                  <TouchableOpacity
-                      onPress={() => props.setDisplayThread(false)}>
-                      <Text style = {styles.cancelBtn}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style = {styles.postBtn} onPress={postThread}>
-                      <Text style = {styles.postBtnText}>Post</Text>
-                  </TouchableOpacity>
-                </View>
-        
-                </SafeAreaView>
-            </View>
-            </KeyboardAvoidingView>
-        </Modal>
+  const postThread = () => {
+    console.log("retrieving all posts");
+    var request = postRequest(
+      createPostQuery(
+        title,
+        description,
+        "lK5Apx1GNsaDw8UZK8zpJnRTNR33",
+        props.currentLocation.coords.longitude,
+        props.currentLocation.coords.latitude,
+        currentEmoji
+      ),
+        "/graphql"
     );
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        props.setDisplayThread(false);
+      });
+    });
+  }
+
+  return (
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={props.displayThread}>
+    <KeyboardAvoidingView style = {{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <TouchableOpacity style = {{flex: 1,}} onPress={() => props.setDisplayThread(false)}>
+        </TouchableOpacity>
+        <EmojiSelector
+            setCurrentEmoji = {setCurrentEmoji}/>
+        <View style = {styles.postModal}>
+          <SafeAreaView style = {{flex: 1}}>
+            <View style = {styles.body}>
+            <View style = {styles.titleContainer}>
+                <Text style = {{paddingRight: 5, fontSize: 30}}>{currentEmoji}</Text>
+                <TextInput
+                style={styles.title}
+                onChangeText={text => onChangeTitle(text)}
+                value={title}
+                placeholder = {"Title"}
+                autoFocus={true}
+                />
+            </View>
+            <TextInput
+                style = {styles.description}
+                multiline={true}
+                numberOfLines={4}
+                onChangeText={(text) => onChangeDescription(text)}
+                value={description}
+                placeholder = "Write something ...."
+            />
+            </View>
+            <View style ={styles.header}>
+              <TouchableOpacity
+                  onPress={() => props.emitThread(true)}>
+                  <Text style = {styles.cancelBtn}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style = {styles.postBtn} onPress={postThread}>
+                  <Text style = {styles.postBtnText}>Post</Text>
+              </TouchableOpacity>
+            </View>
+    
+            </SafeAreaView>
+        </View>
+        </KeyboardAvoidingView>
+    </Modal>
+  );
 }
 
 export default CreateThreadModal;

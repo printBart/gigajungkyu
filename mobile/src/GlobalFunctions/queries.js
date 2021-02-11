@@ -72,3 +72,27 @@ export function getAllCommentsByPostIdQuery(postId){
         }`
     }
 }
+
+export function createPostQuery(title, description, creator, latitude, longitude, emoji){
+    console.log(title);
+    console.log(description);
+    console.log(creator);
+    console.log(latitude);
+    console.log(longitude);
+    return{
+        query:
+        `mutation{
+            createPost(title: "${title}", description:"${description}", creator: "${creator}", latitude: ${latitude}, longitude: ${longitude}, emoji: "${emoji}"){
+                _id
+                title
+                description
+                creator{
+                    _id
+                }
+                latitude
+                longitude
+                date
+            }
+        }`
+    }
+}
