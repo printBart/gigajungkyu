@@ -15,7 +15,6 @@ import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 import { postRequest } from '../../GlobalFunctions/request';
 import { getAllPostsQuery } from '../../GlobalFunctions/queries';
 import ThreadModal from '../../GlobalComponents/ThreadModal';
-import mock from './mock.json';
 
 const styles = StyleSheet.create({
   threadView: {
@@ -95,10 +94,6 @@ const ThreadView = () => {
               setSelectedThread = {setSelectedThread}/>
           )
         })}
-        <ThreadPreview
-          key = {"boq"}
-          post = {mock}
-          setSelectedThread = {setSelectedThread}/>
       </ScrollView>
 
       <CreateThreadModal

@@ -9,6 +9,10 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 
+import Geolocation from '@react-native-community/geolocation';
+import { postRequest } from '../GlobalFunctions/request';
+import { createCommentQuery } from '../GlobalFunctions/queries';
+
 const styles = StyleSheet.create({
   commentModal: {
     backgroundColor: "white",
@@ -61,8 +65,20 @@ const CommentModal = (props) => {
   const [comment, setComment] = useState("");
 
   const postComment = () => {
-    console.log(comment);
-    props.setDisplayComment(false);
+    var request = postRequest(
+      createCommentQuery(comment, "lK5Apx1GNsaDw8UZK8zpJnRTNR33", props.currentLocation.coords.latitude, props.currentLocation.coords.longitude, props.post._id),
+        "/graphql"
+    );
+    fetch(request).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          props.setDisplayComment(false);
+          //props.commentThread(data.data.createComment); //live data
+          setComment('');
+          data.data.createComment.layer = 0;
+          props.setComments(oldComments => [...oldComments, data.data.createComment]);
+        })
+    });
   }
 
   return (

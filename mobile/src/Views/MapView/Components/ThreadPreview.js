@@ -4,11 +4,11 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Dimensions
 } from 'react-native';
 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { convertDeltaMilisToTime } from '../../../GlobalFunctions/date';
 
 const styles = StyleSheet.create({
     threadPreview: {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         margin: 10,
-        maxWidth: 500,
+        maxWidth: 350,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -75,19 +75,19 @@ const styles = StyleSheet.create({
 
 const ThreadPreview = (props) => {
   return (
-    <TouchableOpacity style = {styles.threadPreview}>
+    <TouchableOpacity style = {styles.threadPreview} onPress =  {() => props.setSelectedThread(props.post)}>
         <View style = {styles.voteContainer}>
             <TouchableOpacity>
                 <FeatherIcon name="chevron-up" size={35} color = {"lightgray"}/>
             </TouchableOpacity>
-            <Text>83</Text>
+            <Text style= {{fontSize: 15, fontWeight: "600"}}>83</Text>
             <TouchableOpacity>
                 <FeatherIcon name="chevron-down" size={35} color = {"lightgray"}/>
             </TouchableOpacity>
         </View>
         <View style = {styles.threadBodyContainer}>
             <View>
-                <Text style = {styles.threadTitle}>😝 {props.post.title}</Text>
+                <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
             </View>
             <Text style = {styles.threadDescription}>{props.post.description}</Text>
             <View style = {styles.footer}>
@@ -95,7 +95,7 @@ const ThreadPreview = (props) => {
                     <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
                     <Text style ={styles.footerRight}>&nbsp;10 Comments</Text>
                 </View>
-                <Text style = {styles.footerRight}>🐻 1 minuite ago</Text>
+                <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.post.date)} ago</Text>
             </View>
         </View>
         <View style = {styles.triangle}></View>

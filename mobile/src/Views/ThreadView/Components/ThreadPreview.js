@@ -9,6 +9,9 @@ import {
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+//functions
+import { convertDeltaMilisToTime } from '../../../GlobalFunctions/date';
+
 
 const styles = StyleSheet.create({
     threadPreview: {
@@ -76,7 +79,7 @@ const ThreadPreview = (props) => {
             </View>
             <View style = {styles.threadBodyContainer}>
                 <View>
-                    <Text style = {styles.threadTitle}>😝 {props.post.title}</Text>
+                    <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
                 </View>
                 <Text style = {styles.threadDescription}>{props.post.description}</Text>
                 <View style = {styles.footer}>
@@ -84,7 +87,7 @@ const ThreadPreview = (props) => {
                         <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
                         <Text style ={styles.footerRight}>&nbsp;10 Comments</Text>
                     </View>
-                    <Text style = {styles.footerRight}>🐻 1 minuite ago</Text>
+                    <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(Number(props.post.date))} ago</Text>
                 </View>
             </View>
         </TouchableOpacity>

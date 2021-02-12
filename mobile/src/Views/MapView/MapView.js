@@ -16,6 +16,7 @@ import token from '../../../token.json';
 import PostButton from '../../GlobalComponents/PostButton';
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 import ThreadPreview from './Components/ThreadPreview';
+import ThreadModal from '../../GlobalComponents/ThreadModal';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -106,6 +107,7 @@ const MapView = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
   const [livePosts, setLivePosts] = useState([]);
+  const [selectedThread, setSelectedThread] = useState(null);
 
 
   useEffect(() => {
@@ -113,7 +115,8 @@ const MapView = () => {
 
     socket.on('displayLivePosts', (livePosts) => {
       setLivePosts(livePosts);
-    })
+    });
+    emitThread();
     Geolocation.watchPosition(
       (position) => {setCurrentLocation(position)},
       (error) => {console.log(error.code, error.message);},
@@ -124,9 +127,6 @@ const MapView = () => {
     setDisplayThread(false);
     socket.emit('postThread', thread);
   }
-
-  console.log(currentLocation && currentLocation.coords);
-  console.log(livePosts);
 
   
   return (
@@ -166,7 +166,8 @@ const MapView = () => {
                     anchor = {{x: 0.5, y: 2}}
                     >
                       <ThreadPreview
-                        post = {post}/>
+                        post = {post}
+                        setSelectedThread = {setSelectedThread}/>
                   </MapboxGL.PointAnnotation>
                 )
               })}
@@ -177,6 +178,12 @@ const MapView = () => {
         currentLocation = {currentLocation}
         setDisplayThread = {setDisplayThread}
         emitThread = {emitThread}/>
+
+      {selectedThread &&
+      <ThreadModal
+        currentLocation = {currentLocation}
+        selectedThread = {selectedThread}
+        setSelectedThread = {setSelectedThread}/>}
 
       <TouchableOpacity
         onPress={() => setDisplayThread(true)}>

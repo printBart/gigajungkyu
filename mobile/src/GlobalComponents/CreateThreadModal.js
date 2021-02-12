@@ -97,9 +97,17 @@ const CreateThreadModal = (props) => {
     fetch(request).then((response) => {
       response.json().then((data) => {
         console.log(data);
+        props.emitThread();
+        resetThreadInputs();
         props.setDisplayThread(false);
       });
     });
+  }
+
+  const resetThreadInputs = () => {
+    onChangeTitle("");
+    onChangeDescription("");
+    setCurrentEmoji("😀");
   }
 
   return (
@@ -136,7 +144,7 @@ const CreateThreadModal = (props) => {
             </View>
             <View style ={styles.header}>
               <TouchableOpacity
-                  onPress={() => props.emitThread(true)}>
+                  onPress={() => props.setDisplayThread(false)}>
                   <Text style = {styles.cancelBtn}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style = {styles.postBtn} onPress={postThread}>

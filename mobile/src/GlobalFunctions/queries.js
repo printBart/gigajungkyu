@@ -74,11 +74,6 @@ export function getAllCommentsByPostIdQuery(postId){
 }
 
 export function createPostQuery(title, description, creator, latitude, longitude, emoji){
-    console.log(title);
-    console.log(description);
-    console.log(creator);
-    console.log(latitude);
-    console.log(longitude);
     return{
         query:
         `mutation{
@@ -92,6 +87,37 @@ export function createPostQuery(title, description, creator, latitude, longitude
                 latitude
                 longitude
                 date
+            }
+        }`
+    }
+}
+
+export function createCommentQuery(description, creator, latitude, longitude, postId, parentCommentId){
+    parentCommentId ? parentCommentId = '"' + parentCommentId + '"' : parentCommentId = null;
+    return{
+        query:
+        `mutation{
+            createComment(description: "${description}", creator: "${creator}", latitude: ${latitude}, longitude: ${longitude}, postId: "${postId}", parentComment: ${parentCommentId}){
+                _id
+                description
+                creator{
+                    _id
+                    username
+                }
+                latitude
+                longitude
+                date
+                post{
+                    _id
+                    title
+                    description
+                }
+                parentComment{
+                    _id
+                }
+                childComments{
+                    _id
+                }
             }
         }`
     }

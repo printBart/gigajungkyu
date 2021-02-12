@@ -18,6 +18,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { postRequest } from '../GlobalFunctions/request';
 import { getAllCommentsByPostIdQuery } from '../GlobalFunctions/queries';
 import CommentModal from './CommentModal';
+import { convertDeltaMilisToTime } from '../GlobalFunctions/date';
 
 const styles = StyleSheet.create({
     header: {
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
 
 const ThreadModal = (props) => {
     const [displayComment, setDisplayComment] = useState(false);
+    const [comments, setComments] = useState([]);
 
     useEffect(() => {
         getThreadData();
@@ -136,7 +138,7 @@ const ThreadModal = (props) => {
             );
             fetch(request).then((response) => {
                 response.json().then((data) => {
-                    console.log(data);
+                    setComments(data.data.getAllCommentsByPostId);
                 //setTreeComments(data.data.getAllCommentsByPostId);
                 //sortTraversedComments(data.data.getAllCommentsByPostId);
                 })
@@ -144,7 +146,7 @@ const ThreadModal = (props) => {
         )
     }
 
-
+    console.log(comments);
 
     return (
         <Modal
@@ -160,46 +162,46 @@ const ThreadModal = (props) => {
                     <View style = {styles.thread}>
                         <View style = {styles.voteContainer}>
                             <TouchableOpacity>
-                                <FeatherIcon name="chevron-up" size={35} />
+                                <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
                             </TouchableOpacity>
-                            <Text>83</Text>
+                            <Text style={{fontSize: 15, fontWeight: "600"}}>83</Text>
                             <TouchableOpacity>
-                                <FeatherIcon name="chevron-down" size={35} />
+                                <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
                             </TouchableOpacity>
                         </View>
                         <View style = {styles.threadContainer}>
-                            <Text style = {styles.title}>😝 {props.selectedThread.title}</Text>
+                            <Text style = {styles.title}>{props.selectedThread.emoji} {props.selectedThread.title}</Text>
                             <Text style = {styles.description}>{props.selectedThread.description}</Text>
                             <View style = {styles.footer}>
                                 <TouchableOpacity style = {styles.footerItem}>
                                     <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
                                     <Text style ={styles.footerLeft}>&nbsp;10 Comments</Text>
                                 </TouchableOpacity>
-                                <Text style = {styles.footerRight}>🐻 5 minuite ago</Text>
+                                <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.selectedThread.date)} ago</Text>
                             </View>
                         </View>
                     </View>
                     <View style = {styles.comments}>
-                        {[...Array(10).keys()].map((comment, index) => {
+                        {comments.map((comment, index) => {
                             return(
-                                <View key = {index} style = {styles.comment}>
+                                <View key = {comment._id} style = {styles.comment}>
                                     <View style = {styles.voteContainer}>
                                         <TouchableOpacity>
-                                            <FeatherIcon name="chevron-up" size={35} />
+                                            <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
                                         </TouchableOpacity>
-                                        <Text>10</Text>
+                                        <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
                                         <TouchableOpacity>
-                                            <FeatherIcon name="chevron-down" size={35} />
+                                            <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
                                         </TouchableOpacity>
                                     </View>
                                     <View style = {styles.threadContainer}>
-                                        <Text style = {styles.description}>This is a comment testing</Text>
+                                        <Text style = {styles.description}>{comment.description}</Text>
                                         <View style = {styles.footerComment}>
                                             <TouchableOpacity style = {styles.footerItem} onPress = {() => setDisplayComment(true)}>
                                                 <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
                                                 <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
                                             </TouchableOpacity>
-                                            <Text style = {styles.footerRight}>🐵 2 minuite ago</Text>
+                                            <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -214,8 +216,11 @@ const ThreadModal = (props) => {
                     </View>
                 </TouchableOpacity>
                 <CommentModal
+                    currentLocation = {props.currentLocation}
                     displayComment = {displayComment}
-                    setDisplayComment = {setDisplayComment}/>
+                    setDisplayComment = {setDisplayComment}
+                    post = {props.selectedThread}
+                    setComments = {setComments}/>
             </SafeAreaView>
         </Modal>
     );
