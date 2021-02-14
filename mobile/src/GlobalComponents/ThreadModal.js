@@ -120,33 +120,71 @@ const styles = StyleSheet.create({
         backgroundColor: "#f5f5f5",
         padding: 10,
         borderRadius: 5,
-    }
+    },
 });
 
 const ThreadModal = (props) => {
     const [displayComment, setDisplayComment] = useState(false);
+
+    //unsorted tree comments (raw)
+    const[treeComments, setTreeComments] = useState([]);
     const [comments, setComments] = useState([]);
+    const[hiddenComments, setHiddeComments] = useState([]);
 
     useEffect(() => {
-        getThreadData();
+        getCommentsByPostId();
     }, []);
 
-    const getThreadData = () => {
+    const getCommentsByPostId = () => {
         var request = postRequest(
             getAllCommentsByPostIdQuery(props.selectedThread._id),
             "/graphql"
             );
             fetch(request).then((response) => {
                 response.json().then((data) => {
-                    setComments(data.data.getAllCommentsByPostId);
-                //setTreeComments(data.data.getAllCommentsByPostId);
-                //sortTraversedComments(data.data.getAllCommentsByPostId);
+                    setTreeComments(data.data.getAllCommentsByPostId);
+                    setComments(sortTraversedComments(data.data.getAllCommentsByPostId));
                 })
             }
         )
     }
 
-    console.log(comments);
+    const sortTraversedComments = (nodes) => {
+        const result = [];
+        inOrderTraversal(nodes, 0, result);
+        return result;
+    }
+
+    const inOrderTraversal = (nodes, layerCount, result) => {
+        if(nodes){
+            nodes.forEach(function(node){
+                if(node && hiddenComments.indexOf(node._id)<0){
+                node.layer = layerCount;
+                result.push(node);
+                inOrderTraversal(node.childComments, layerCount+1, result);
+                }
+                else{
+                node.layer = layerCount;
+                result.push(node);
+                }
+            });
+        }
+    }
+
+    function hideComments(nodeId){
+        const nodeExists = hiddenComments.some(comment => comment === nodeId);
+        if(nodeExists){
+          setHiddeComments(hiddenComments.filter(comment => comment !== nodeId));
+        } else{
+          setHiddeComments(oldArray => [...oldArray, nodeId]);
+        }
+    }
+
+    useEffect(() => {
+        setComments(sortTraversedComments(treeComments));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [hiddenComments])
+    
 
     return (
         <Modal
@@ -182,34 +220,42 @@ const ThreadModal = (props) => {
                         </View>
                     </View>
                     <View style = {styles.comments}>
-                        {comments.map((comment, index) => {
-                            return(
-                                <View key = {comment._id} style = {styles.comment}>
-                                    <View style = {styles.voteContainer}>
-                                        <TouchableOpacity>
-                                            <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
-                                        </TouchableOpacity>
-                                        <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
-                                        <TouchableOpacity>
-                                            <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style = {styles.threadContainer}>
-                                        <Text style = {styles.description}>{comment.description}</Text>
-                                        <View style = {styles.footerComment}>
-                                            <TouchableOpacity style = {styles.footerItem} onPress = {() => setDisplayComment(true)}>
-                                                <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
-                                                <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
+                        {comments.map((comment) => {
+                            if(hiddenComments.indexOf(comment._id)<0){
+                                return(
+                                    <TouchableOpacity key = {comment._id} style = {[{marginLeft: 25*comment.layer + 5}, styles.comment]} onPress = {() => hideComments(comment._id)}>
+                                        <View style = {styles.voteContainer}>
+                                            <TouchableOpacity>
+                                                <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
                                             </TouchableOpacity>
-                                            <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                            <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
+                                            <TouchableOpacity>
+                                                <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
+                                            </TouchableOpacity>
                                         </View>
-                                    </View>
-                                </View>
-                            )
+                                        <View style = {styles.threadContainer}>
+                                            <Text style = {styles.description}>{comment.description}</Text>
+                                            <View style = {styles.footerComment}>
+                                                <TouchableOpacity style = {styles.footerItem} onPress = {() => setDisplayComment(comment)}>
+                                                    <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
+                                                    <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
+                                                </TouchableOpacity>
+                                                <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }else{
+                                return(
+                                    <TouchableOpacity key = {comment._id} style = {[{marginLeft: 25*comment.layer + 5, padding: 15}, styles.comment]} onPress = {() => hideComments(comment._id)}>
+                                         <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                    </TouchableOpacity>
+                                )
+                            }
                         })}
                     </View>
                 </ScrollView>
-                <TouchableOpacity style = {styles.addCommentContainer} onPress = {() => setDisplayComment(true)}>
+                <TouchableOpacity style = {styles.addCommentContainer} onPress = {() => setDisplayComment(props.selectedThread)}>
                     <Text style = {{fontSize: 20}}>🦄 &nbsp;</Text>
                     <View style = {styles.addComment}>
                         <Text style = {{color: "#6A6A6A", fontSize: 15,}}>Add a comment...</Text>
@@ -220,7 +266,8 @@ const ThreadModal = (props) => {
                     displayComment = {displayComment}
                     setDisplayComment = {setDisplayComment}
                     post = {props.selectedThread}
-                    setComments = {setComments}/>
+                    setComments = {setComments}
+                    getCommentsByPostId = {getCommentsByPostId}/>
             </SafeAreaView>
         </Modal>
     );

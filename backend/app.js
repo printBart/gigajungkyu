@@ -60,7 +60,6 @@ mongoose.connect(
         });
 
         socket.on("postThread", (thread) => {
-            console.log(thread);
             graphqlResolver.getAllRecentPosts().then((posts) => {
                 io.emit("displayLivePosts", posts);
             })

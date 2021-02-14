@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-
+import Geolocation from '@react-native-community/geolocation';
 //components
 import ThreadPreview from './Components/ThreadPreview';
 import PostButton from '../../GlobalComponents/PostButton';
@@ -48,12 +48,17 @@ const styles = StyleSheet.create({
 });
 
 const ThreadView = () => {
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [displayCreateThread, setDisplayCreateThread] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
     getAllPosts();
+    Geolocation.watchPosition(
+      (position) => {setCurrentLocation(position)},
+      (error) => {console.log(error.code, error.message);},
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 50 });
   }, []);
 
   const getAllPosts = () => {
@@ -98,7 +103,8 @@ const ThreadView = () => {
 
       <CreateThreadModal
         displayThread = {displayCreateThread}
-        setDisplayThread = {setDisplayCreateThread}/>
+        setDisplayThread = {setDisplayCreateThread}
+        currentLocation = {currentLocation}/>
       
       {selectedThread &&
       <ThreadModal

@@ -9,7 +9,6 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 
-import Geolocation from '@react-native-community/geolocation';
 import { postRequest } from '../GlobalFunctions/request';
 import { createCommentQuery } from '../GlobalFunctions/queries';
 
@@ -65,18 +64,24 @@ const CommentModal = (props) => {
   const [comment, setComment] = useState("");
 
   const postComment = () => {
+    const commentId = props.displayComment._id !== props.post._id && props.displayComment._id;
+    console.log(commentId);
     var request = postRequest(
-      createCommentQuery(comment, "lK5Apx1GNsaDw8UZK8zpJnRTNR33", props.currentLocation.coords.latitude, props.currentLocation.coords.longitude, props.post._id),
+      createCommentQuery(comment, "lK5Apx1GNsaDw8UZK8zpJnRTNR33", props.currentLocation.coords.latitude, props.currentLocation.coords.longitude, props.post._id, commentId),
         "/graphql"
     );
     fetch(request).then((response) => {
         response.json().then((data) => {
-          console.log(data);
           props.setDisplayComment(false);
           //props.commentThread(data.data.createComment); //live data
           setComment('');
-          data.data.createComment.layer = 0;
-          props.setComments(oldComments => [...oldComments, data.data.createComment]);
+          if(commentId){
+            props.getCommentsByPostId();
+          }
+          else{
+            data.data.createComment.layer = 0;
+            props.setComments(oldComments => [...oldComments, data.data.createComment]);
+          }
         })
     });
   }
@@ -85,9 +90,9 @@ const CommentModal = (props) => {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={props.displayComment}
+      visible={props.displayComment ? true : false}
     >
-      <TouchableOpacity style = {{flex: 2}} onPress={() => props.setDisplayComment(false)}>
+      <TouchableOpacity style = {{flex: 2}} onPress={() => props.setDisplayComment(null)}>
       </TouchableOpacity>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style = {styles.commentModal}>
         <View style = {styles.header}>
@@ -103,7 +108,7 @@ const CommentModal = (props) => {
           autoFocus = {true}/>
           <View style ={styles.footer}>
             <TouchableOpacity
-                onPress={() => props.setDisplayComment(false)}>
+                onPress={() => props.setDisplayComment(null)}>
                 <Text style = {styles.cancelBtn}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style = {styles.postBtn} onPress={postComment}>

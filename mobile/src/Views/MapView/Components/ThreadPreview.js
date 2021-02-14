@@ -18,21 +18,21 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         margin: 10,
-        maxWidth: 350,
+        width: 350,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 20,
         },
         shadowOpacity: 0.1,
-        shadowRadius: 10
+        shadowRadius: 10,
     },
     voteContainer: {
         alignItems: "center"
     },
     threadBodyContainer: {
         paddingLeft: 10,
-        paddingRight: 25,
+        flex: 1,
     },
     threadTitle: {
         fontWeight: "600",
@@ -89,7 +89,7 @@ const ThreadPreview = (props) => {
             <View>
                 <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
             </View>
-            <Text style = {styles.threadDescription}>{props.post.description}</Text>
+            <Text style = {styles.threadDescription} numberOfLines = {2} ellipsizeMode="tail">{props.post.description}</Text>
             <View style = {styles.footer}>
                 <View style = {styles.footerLeft}>
                     <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
