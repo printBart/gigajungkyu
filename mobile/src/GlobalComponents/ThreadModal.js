@@ -16,7 +16,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 //funcitons
 import { postRequest } from '../GlobalFunctions/request';
-import { getAllCommentsByPostIdQuery } from '../GlobalFunctions/queries';
+import { getAllCommentsByPostIdQuery, getChildCommentsByCommentId } from '../GlobalFunctions/queries';
 import CommentModal from './CommentModal';
 import { convertDeltaMilisToTime } from '../GlobalFunctions/date';
 
@@ -121,6 +121,21 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
+    loadMore: {
+        marginVertical: 5,
+        backgroundColor: "white",
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
+        borderRadius: 10,
+    }
 });
 
 const ThreadModal = (props) => {
@@ -171,7 +186,7 @@ const ThreadModal = (props) => {
         }
     }
 
-    function hideComments(nodeId){
+    const hideComments = (nodeId) => {
         const nodeExists = hiddenComments.some(comment => comment === nodeId);
         if(nodeExists){
           setHiddeComments(hiddenComments.filter(comment => comment !== nodeId));
@@ -179,12 +194,37 @@ const ThreadModal = (props) => {
           setHiddeComments(oldArray => [...oldArray, nodeId]);
         }
     }
+        
 
     useEffect(() => {
-        setComments(sortTraversedComments(treeComments));
+        //setComments(sortTraversedComments(treeComments));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [hiddenComments])
-    
+    }, [hiddenComments]);
+
+    const loadMoreComments = (nodeId, layer) => {
+        var request = postRequest(
+          getChildCommentsByCommentId(nodeId),
+            "/graphql"
+        );
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                loadTraversedComments(data.data.getChildCommentsByCommentId, layer, nodeId)
+            })
+        });
+    }
+
+    const loadTraversedComments = (nodes, layer, parentNodeId) =>{
+        const result = []
+        inOrderTraversal(nodes, layer, result);
+        const parentIndex = comments.findIndex(comment => comment._id === result[0]._id);
+        let newComments = [...comments];
+        let sliceArr1 = newComments.slice(0,parentIndex);
+        let sliceArr2 = newComments.slice(parentIndex+1);
+        let combArr = [...sliceArr1, ...result, ...sliceArr2];
+        let pp = combArr.filter( (ele, ind) => ind === combArr.findIndex( elem => elem._id === ele._id));
+        //NOTE: still need to filter out leaf node data
+        setComments(pp);
+    }
 
     return (
         <Modal
@@ -221,36 +261,48 @@ const ThreadModal = (props) => {
                     </View>
                     <View style = {styles.comments}>
                         {comments.map((comment) => {
-                            if(hiddenComments.indexOf(comment._id)<0){
-                                return(
-                                    <TouchableOpacity key = {comment._id} style = {[{marginLeft: 25*comment.layer + 5}, styles.comment]} onPress = {() => hideComments(comment._id)}>
-                                        <View style = {styles.voteContainer}>
-                                            <TouchableOpacity>
-                                                <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
+                            if(comment.date){
+                                if(hiddenComments.indexOf(comment._id)<0){
+                                    return(
+                                        <View key = {comment._id}>
+                                            <TouchableOpacity style = {[{marginLeft: 25*comment.layer + 5}, styles.comment]} onPress = {() => hideComments(comment._id)}>
+                                                <View style = {styles.voteContainer}>
+                                                    <TouchableOpacity>
+                                                        <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
+                                                    </TouchableOpacity>
+                                                    <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
+                                                    <TouchableOpacity>
+                                                        <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style = {styles.threadContainer}>
+                                                    <Text style = {styles.description}>{comment.description}</Text>
+                                                    <View style = {styles.footerComment}>
+                                                        <TouchableOpacity style = {styles.footerItem} onPress = {() => setDisplayComment(comment)}>
+                                                            <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
+                                                            <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
+                                                        </TouchableOpacity>
+                                                        <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                                    </View>
+                                                </View>
                                             </TouchableOpacity>
-                                            <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
-                                            <TouchableOpacity>
-                                                <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
-                                            </TouchableOpacity>
+                                            {comment.childComments[0] && !comment.childComments[0].date &&
+                                            <TouchableOpacity style = {[{marginLeft: 25*comment.layer + 5}, styles.loadMore]}
+                                                onPress = {() => loadMoreComments(comment._id, comment.layer)}>
+                                                <Text style = {{textAlign: "center", fontWeight: "600", color: "gray"}}>LOAD MORE COMMENTS</Text>
+                                            </TouchableOpacity>}
                                         </View>
-                                        <View style = {styles.threadContainer}>
-                                            <Text style = {styles.description}>{comment.description}</Text>
-                                            <View style = {styles.footerComment}>
-                                                <TouchableOpacity style = {styles.footerItem} onPress = {() => setDisplayComment(comment)}>
-                                                    <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
-                                                    <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
-                                                </TouchableOpacity>
-                                                <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            }else{
-                                return(
-                                    <TouchableOpacity key = {comment._id} style = {[{marginLeft: 25*comment.layer + 5, padding: 15}, styles.comment]} onPress = {() => hideComments(comment._id)}>
-                                         <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
-                                    </TouchableOpacity>
-                                )
+                                    )
+                                }else{
+                                    return(
+                                        <TouchableOpacity key = {comment._id} style = {[{marginLeft: 25*comment.layer + 5, padding: 15}, styles.comment]} onPress = {() => hideComments(comment._id)}>
+                                            <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                        </TouchableOpacity>
+                                    )
+                                }
+                            }
+                            else{
+                                return null;
                             }
                         })}
                     </View>

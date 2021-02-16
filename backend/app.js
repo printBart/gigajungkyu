@@ -67,6 +67,7 @@ mongoose.connect(
 
         socket.on("sendUserLocation", (userLocationData) => {
             var userMovedIndex = onlineUsers.findIndex(user => user.token === userLocationData.userToken);
+            
             if(userMovedIndex>-1){
                 onlineUsers[userMovedIndex].longitude = userLocationData.longitude;
                 onlineUsers[userMovedIndex].latitude = userLocationData.latitude;

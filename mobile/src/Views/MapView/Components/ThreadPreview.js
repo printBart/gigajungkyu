@@ -74,33 +74,33 @@ const styles = StyleSheet.create({
 });
 
 const ThreadPreview = (props) => {
-  return (
-    <TouchableOpacity style = {styles.threadPreview} onPress =  {() => props.setSelectedThread(props.post)}>
-        <View style = {styles.voteContainer}>
-            <TouchableOpacity>
-                <FeatherIcon name="chevron-up" size={35} color = {"lightgray"}/>
-            </TouchableOpacity>
-            <Text style= {{fontSize: 15, fontWeight: "600"}}>83</Text>
-            <TouchableOpacity>
-                <FeatherIcon name="chevron-down" size={35} color = {"lightgray"}/>
-            </TouchableOpacity>
-        </View>
-        <View style = {styles.threadBodyContainer}>
-            <View>
-                <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
+    return (
+        <TouchableOpacity style = {styles.threadPreview} onPress =  {() => props.setSelectedThread(props.post)}>
+            <View style = {styles.voteContainer}>
+                <TouchableOpacity>
+                    <FeatherIcon name="chevron-up" size={35} color = {"lightgray"}/>
+                </TouchableOpacity>
+                <Text style= {{fontSize: 15, fontWeight: "600"}}>83</Text>
+                <TouchableOpacity>
+                    <FeatherIcon name="chevron-down" size={35} color = {"lightgray"}/>
+                </TouchableOpacity>
             </View>
-            <Text style = {styles.threadDescription} numberOfLines = {2} ellipsizeMode="tail">{props.post.description}</Text>
-            <View style = {styles.footer}>
-                <View style = {styles.footerLeft}>
-                    <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
-                    <Text style ={styles.footerRight}>&nbsp;10 Comments</Text>
+            <View style = {styles.threadBodyContainer}>
+                <View>
+                    <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
                 </View>
-                <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.post.date)} ago</Text>
+                <Text style = {styles.threadDescription} numberOfLines = {2} ellipsizeMode="tail">{props.post.description}</Text>
+                <View style = {styles.footer}>
+                    <View style = {styles.footerLeft}>
+                        <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
+                        <Text style ={styles.footerRight}>&nbsp;Comments</Text>
+                    </View>
+                    <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.post.date)} ago</Text>
+                </View>
             </View>
-        </View>
-        <View style = {styles.triangle}></View>
-    </TouchableOpacity>
-  );
+            <View style = {styles.triangle}></View>
+        </TouchableOpacity>
+    );
 }
 
 export default ThreadPreview;

@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
 let socket;
 
 const MapView = () => {
+  const [currentUsers, updateCurrentUsers] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
   const [livePosts, setLivePosts] = useState([]);
@@ -116,9 +117,16 @@ const MapView = () => {
     socket.on('displayLivePosts', (livePosts) => {
       setLivePosts(livePosts);
     });
+
+    socket.on('displayCurrentUsers', (onlineUsers) => {
+      updateCurrentUsers(onlineUsers);
+  })
     emitThread();
     Geolocation.watchPosition(
-      (position) => {setCurrentLocation(position)},
+      (position) => {
+        setCurrentLocation(position);
+        sendUserLocation(position.coords.longitude, position.coords.latitude)
+      },
       (error) => {console.log(error.code, error.message);},
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 50 });
   }, []);
@@ -128,6 +136,15 @@ const MapView = () => {
     socket.emit('postThread', thread);
   }
 
+  const sendUserLocation = (longitude, latitude) => {
+    socket.emit('sendUserLocation', {
+      userToken: "lK5Apx1GNsaDw8UZK8zpJnRTNR33",
+      longitude,
+      latitude
+    })
+  }
+
+  console.log(currentUsers);
   
   return (
     <View style={styles.page}>

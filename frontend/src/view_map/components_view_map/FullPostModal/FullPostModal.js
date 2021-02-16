@@ -104,7 +104,7 @@ function FullPostModal(props){
   function loadTraversedComments(nodes, layer, parentNodeId){
     const result = []
     inOrderTraversal(nodes, layer, result);
-    const parentIndex = comments.findIndex(comment => comment._id === result[0]._id);
+    const parentIndex = comments.fidnIndex(comment => comment._id === result[0]._id);
     let newComments = [...comments];
     let sliceArr1 = newComments.slice(0,parentIndex);
     let sliceArr2 = newComments.slice(parentIndex+1);
