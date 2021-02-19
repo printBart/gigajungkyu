@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 //views
-import Router from './Router';
+import MapView from './src/Views/MapView/MapView';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false}}>
-        <Stack.Screen name="router" component={Router} />
+        <Stack.Screen name="router" component={MapView} />
       </Stack.Navigator>
     </NavigationContainer>
   );

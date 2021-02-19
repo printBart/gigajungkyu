@@ -17,6 +17,8 @@ import PostButton from '../../GlobalComponents/PostButton';
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 import ThreadPreview from './Components/ThreadPreview';
 import ThreadModal from '../../GlobalComponents/ThreadModal';
+import ViewAllThreadButton from './Components/ViewAllThread';
+import ThreadView from '../ThreadView/ThreadView';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -109,6 +111,7 @@ const MapView = () => {
   const [displayThread, setDisplayThread] = useState(false);
   const [livePosts, setLivePosts] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
+  const [displayAllThreads, setDisplayAllThreads] = useState(null);
 
 
   useEffect(() => {
@@ -195,6 +198,9 @@ const MapView = () => {
         currentLocation = {currentLocation}
         setDisplayThread = {setDisplayThread}
         emitThread = {emitThread}/>
+      <ThreadView
+        displayAllThreads = {displayAllThreads}
+        setDisplayAllThreads = {setDisplayAllThreads}/>
 
       {selectedThread &&
       <ThreadModal
@@ -205,6 +211,9 @@ const MapView = () => {
       <TouchableOpacity
         onPress={() => setDisplayThread(true)}>
         <PostButton />
+      </TouchableOpacity>
+      <TouchableOpacity onPress = {() => setDisplayAllThreads(true)}>
+        <ViewAllThreadButton />
       </TouchableOpacity>
     </View>
   );

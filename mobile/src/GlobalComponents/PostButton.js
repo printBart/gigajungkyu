@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     postBtn: {
         position: 'absolute',
         right: 15,
-        bottom: 15,
+        bottom: 30,
         backgroundColor: "white",
         padding: 15,
         borderRadius: 50,

@@ -5,15 +5,21 @@ import {
   View,
   ScrollView,
   Text,
+  Modal,
   TouchableOpacity,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+
+import FeatherIcon from 'react-native-vector-icons/Feather';
+
+//functions
+import { postRequest } from '../../GlobalFunctions/request';
+import { getAllPostsQuery } from '../../GlobalFunctions/queries';
+
 //components
 import ThreadPreview from './Components/ThreadPreview';
 import PostButton from '../../GlobalComponents/PostButton';
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
-import { postRequest } from '../../GlobalFunctions/request';
-import { getAllPostsQuery } from '../../GlobalFunctions/queries';
 import ThreadModal from '../../GlobalComponents/ThreadModal';
 
 const styles = StyleSheet.create({
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const ThreadView = () => {
+const ThreadView = (props) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayCreateThread, setDisplayCreateThread] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
@@ -75,8 +81,19 @@ const ThreadView = () => {
   }
 
   return (
+    <Modal
+      animationType="slide"
+      transparent={false}
+      visible={props.displayAllThreads ? true : false}
+    >
     <SafeAreaView style = {styles.threadView}>
-      <View style = {{padding: 20}}>
+      <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row"}}>
+        <TouchableOpacity  onPress={() => props.setDisplayAllThreads(false)}>
+          <FeatherIcon name = "chevron-left" size = {35}/>
+        </TouchableOpacity>
+        <View style = {{flex: 1}}></View>
+      </View>
+      <View style = {{padding: 20, paddingTop: 0}}>
         <Text style = {styles.header}>👋 Welcome!</Text>
       </View>
       <View style = {styles.filterMenu}>
@@ -116,6 +133,7 @@ const ThreadView = () => {
         <PostButton />
       </TouchableOpacity>
     </SafeAreaView>
+    </Modal>
   );
 };
 
