@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Text,
+  SafeAreaView,
 } from 'react-native';
 
 import Geolocation from '@react-native-community/geolocation';
@@ -100,6 +101,27 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
     borderRadius: 10,
+  },
+  profileButton: {
+    backgroundColor: "#7367FF", 
+    display: "flex", 
+    flex: 1,
+    alignItems: "center", 
+    justifyContent: "center",
+    paddingLeft: 2.5,
+    paddingBottom: 1,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    shadowColor: "#000",
+      shadowOffset: {
+          width: 0,
+          height: 5,
+      },
+      shadowOpacity: 0.34,
+      shadowRadius: 6.27,
+
+      elevation: 10,
   }
 });
 
@@ -115,7 +137,7 @@ const MapView = () => {
 
 
   useEffect(() => {
-    socket = io('http://192.168.1.21:8080');
+    socket = io('http://192.168.1.38:8080');
 
     socket.on('displayLivePosts', (livePosts) => {
       setLivePosts(livePosts);
@@ -147,7 +169,10 @@ const MapView = () => {
     })
   }
 
-  console.log(currentUsers);
+  const toggleCreateThreadFromList = () => {
+    setDisplayAllThreads(false);
+    setDisplayThread(true);
+  }
   
   return (
     <View style={styles.page}>
@@ -200,13 +225,19 @@ const MapView = () => {
         emitThread = {emitThread}/>
       <ThreadView
         displayAllThreads = {displayAllThreads}
-        setDisplayAllThreads = {setDisplayAllThreads}/>
+        setDisplayAllThreads = {setDisplayAllThreads}
+        toggleCreateThread = {toggleCreateThreadFromList}/>
 
       {selectedThread &&
       <ThreadModal
         currentLocation = {currentLocation}
         selectedThread = {selectedThread}
         setSelectedThread = {setSelectedThread}/>}
+      <SafeAreaView  style = {{position: "absolute", top: 0, right: 10}}>
+        <TouchableOpacity style ={styles.profileButton}>
+          <Text style ={{fontSize: 30}}>🐶</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
 
       <TouchableOpacity
         onPress={() => setDisplayThread(true)}>

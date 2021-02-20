@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
 
 const ThreadView = (props) => {
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [displayCreateThread, setDisplayCreateThread] = useState(false);
   const [selectedThread, setSelectedThread] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
 
@@ -75,6 +74,7 @@ const ThreadView = (props) => {
    );
    fetch(request).then((response) => {
       response.json().then((data) => {
+        console.log(data);
         setAllPosts(data.data.getAllPosts);
       });
    });
@@ -87,11 +87,14 @@ const ThreadView = (props) => {
       visible={props.displayAllThreads ? true : false}
     >
     <SafeAreaView style = {styles.threadView}>
-      <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row"}}>
+      <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center"}}>
         <TouchableOpacity  onPress={() => props.setDisplayAllThreads(false)}>
-          <FeatherIcon name = "chevron-left" size = {35}/>
+          <FeatherIcon name = "chevron-left" size = {35} color = "darkgray"/>
         </TouchableOpacity>
         <View style = {{flex: 1}}></View>
+        <TouchableOpacity style = {{marginRight: 10}} onPress = {props.toggleCreateThread}>
+          <FeatherIcon name = "edit" size = {27} color = "#3C3C3D"/>
+        </TouchableOpacity>
       </View>
       <View style = {{padding: 20, paddingTop: 0}}>
         <Text style = {styles.header}>👋 Welcome!</Text>
@@ -117,21 +120,13 @@ const ThreadView = (props) => {
           )
         })}
       </ScrollView>
-
-      <CreateThreadModal
-        displayThread = {displayCreateThread}
-        setDisplayThread = {setDisplayCreateThread}
-        currentLocation = {currentLocation}/>
       
       {selectedThread &&
       <ThreadModal
         selectedThread = {selectedThread}
         setSelectedThread = {setSelectedThread}/>}
 
-      <TouchableOpacity
-        onPress={() => setDisplayCreateThread(true)}>
-        <PostButton />
-      </TouchableOpacity>
+
     </SafeAreaView>
     </Modal>
   );
