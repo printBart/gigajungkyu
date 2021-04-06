@@ -14,12 +14,12 @@ import io from "socket.io-client";
 import token from '../../../token.json';
 
 //components
-import PostButton from '../../GlobalComponents/PostButton';
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 import ThreadPreview from './Components/ThreadPreview';
 import ThreadModal from '../../GlobalComponents/ThreadModal';
-import ViewAllThreadButton from './Components/ViewAllThread';
 import ThreadView from '../ThreadView/ThreadView';
+import ProfileModal from '../../GlobalComponents/ProfileModal';
+import BottomModalPreview from './Components/BottomModalPreview';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -131,13 +131,14 @@ const MapView = () => {
   const [currentUsers, updateCurrentUsers] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
   const [livePosts, setLivePosts] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [displayAllThreads, setDisplayAllThreads] = useState(null);
 
 
   useEffect(() => {
-    socket = io('http://192.168.1.38:8080');
+    socket = io('http://192.168.1.73:8080');
 
     socket.on('displayLivePosts', (livePosts) => {
       setLivePosts(livePosts);
@@ -233,19 +234,18 @@ const MapView = () => {
         currentLocation = {currentLocation}
         selectedThread = {selectedThread}
         setSelectedThread = {setSelectedThread}/>}
-      <SafeAreaView  style = {{position: "absolute", top: 0, right: 10}}>
-        <TouchableOpacity style ={styles.profileButton}>
+      <SafeAreaView  style = {{position: "absolute", top: 57.5, right: 20}}>
+        <TouchableOpacity style ={styles.profileButton} onPress = {() => setProfileVisible(true)}>
           <Text style ={{fontSize: 30}}>🐶</Text>
         </TouchableOpacity>
       </SafeAreaView>
 
-      <TouchableOpacity
-        onPress={() => setDisplayThread(true)}>
-        <PostButton />
-      </TouchableOpacity>
-      <TouchableOpacity onPress = {() => setDisplayAllThreads(true)}>
-        <ViewAllThreadButton />
-      </TouchableOpacity>
+      <ProfileModal
+        visible = {profileVisible}
+        setVisible = {setProfileVisible}/>
+      <BottomModalPreview
+        setDisplayThread = {setDisplayThread}
+        setDisplayAllThreads = {setDisplayAllThreads}/>
     </View>
   );
 }

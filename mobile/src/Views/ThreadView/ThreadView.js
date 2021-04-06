@@ -18,13 +18,13 @@ import { getAllPostsQuery } from '../../GlobalFunctions/queries';
 
 //components
 import ThreadPreview from './Components/ThreadPreview';
-import PostButton from '../../GlobalComponents/PostButton';
-import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
 import ThreadModal from '../../GlobalComponents/ThreadModal';
 
 const styles = StyleSheet.create({
   threadView: {
     backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     flex: 1,
   },
   header: {
@@ -83,17 +83,19 @@ const ThreadView = (props) => {
   return (
     <Modal
       animationType="slide"
-      transparent={false}
+      transparent={true}
       visible={props.displayAllThreads ? true : false}
     >
+      <TouchableOpacity style = {{height: "12.5%"}} onPress={() => props.setDisplayAllThreads(false)}>
+        </TouchableOpacity>
     <SafeAreaView style = {styles.threadView}>
-      <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center"}}>
+      <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center", paddingVertical: 20,}}>
         <TouchableOpacity  onPress={() => props.setDisplayAllThreads(false)}>
-          <FeatherIcon name = "chevron-left" size = {35} color = "darkgray"/>
+          <FeatherIcon name = "chevron-down" size = {35}/>
         </TouchableOpacity>
         <View style = {{flex: 1}}></View>
-        <TouchableOpacity style = {{marginRight: 10}} onPress = {props.toggleCreateThread}>
-          <FeatherIcon name = "edit" size = {27} color = "#3C3C3D"/>
+        <TouchableOpacity style = {{marginRight: 5}} onPress = {props.toggleCreateThread}>
+          <FeatherIcon name = "edit" size = {27}/>
         </TouchableOpacity>
       </View>
       <View style = {{padding: 20, paddingTop: 0}}>
