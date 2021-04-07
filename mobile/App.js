@@ -4,12 +4,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import {
-  StyleSheet,
-} from "react-native";
-
 //views
 import MapView from './src/Views/MapView/MapView';
+import AuthenticationStack from './src/Views/Authentication/AuthenticationStack';
 
 const Stack = createStackNavigator();
 
@@ -17,13 +14,17 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false}}>
-        <Stack.Screen name="router" component={MapView} />
+        <Stack.Screen
+            name = "auth"
+            component = {AuthenticationStack}
+            options = {{headerShown: false}}/>
+        <Stack.Screen
+          name="router"
+          component={MapView}
+          options = {{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-});
 
 export default App;

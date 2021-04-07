@@ -12,6 +12,7 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import io from "socket.io-client";
 
 import token from '../../../token.json';
+import Icon from 'react-native-vector-icons/Feather';
 
 //components
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   profileButton: {
-    backgroundColor: "#7367FF", 
+    backgroundColor: "white", 
     display: "flex", 
     flex: 1,
     alignItems: "center", 
@@ -114,14 +115,32 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
     shadowColor: "#000",
-      shadowOffset: {
-          width: 0,
-          height: 5,
-      },
-      shadowOpacity: 0.34,
-      shadowRadius: 6.27,
+    shadowOffset: {
+        width: 0,
+        height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
 
-      elevation: 10,
+    elevation: 10,
+  },
+  sendButton: {
+    backgroundColor: "white",
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    paddingRight: 2.5,
+    paddingTop: 2.5,
   }
 });
 
@@ -234,9 +253,15 @@ const MapView = () => {
         currentLocation = {currentLocation}
         selectedThread = {selectedThread}
         setSelectedThread = {setSelectedThread}/>}
-      <SafeAreaView  style = {{position: "absolute", top: 57.5, right: 20}}>
+      <SafeAreaView  style = {{position: "absolute", top: 50, left: 10}}>
         <TouchableOpacity style ={styles.profileButton} onPress = {() => setProfileVisible(true)}>
           <Text style ={{fontSize: 30}}>🐶</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+
+      <SafeAreaView  style = {{position: "absolute", top: 50, right: 10}}>
+        <TouchableOpacity style ={styles.sendButton} onPress = {() => setProfileVisible(true)}>
+          <Icon name = "send" size={27}/>
         </TouchableOpacity>
       </SafeAreaView>
 
