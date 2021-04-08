@@ -8,9 +8,13 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
+
+import * as firebase from 'firebase';
+
 const styles = StyleSheet.create({
     profileView: {
         flex: 1,
+        justifyContent: "space-between",
         marginHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
@@ -35,7 +39,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     profileButton: {
-        backgroundColor: "#7367FF", 
+        backgroundColor: "white", 
         alignItems: "center", 
         justifyContent: "center",
         paddingLeft: 2.5,
@@ -52,10 +56,24 @@ const styles = StyleSheet.create({
           shadowRadius: 6.27,
     
           elevation: 10,
-      }
+    },
+    logoutBtn: {
+        backgroundColor: "#7367FF",
+        padding: 10,
+        borderRadius: 25,
+    }
 });
 
 const ProfileModal = (props) => {
+    const logoutUser = async() => {
+        props.setVisible(false)
+        try{
+          await firebase.auth().signOut();
+        } catch(e){
+          throw e;
+        }
+    }
+
     return (
             <Modal
                 transparent={true}
@@ -64,11 +82,14 @@ const ProfileModal = (props) => {
                 <SafeAreaView style={{display: 'flex', flex: 1}}>
                     <View style = {styles.profileView}>
                         <View style = {styles.header}>
-                            <View style={{flex: 1}}></View>
                             <TouchableOpacity style ={styles.profileButton}>
                                 <Text style ={{fontSize: 30}}>🐶</Text>
                             </TouchableOpacity>
+                            <View style={{flex: 1}}></View>
                         </View>
+                        <TouchableOpacity style = {styles.logoutBtn} onPress = {logoutUser}>
+                            <Text style = {{textAlign: "center", fontSize: 20, fontWeight: "bold", color: "white"}}>Logout</Text>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity style = {styles.filler} onPress = {() => props.setVisible(false)}></TouchableOpacity>
                 </SafeAreaView>

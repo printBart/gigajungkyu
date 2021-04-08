@@ -24,6 +24,12 @@ const styles = StyleSheet.create({
     header: {
         marginBottom: 10,
     },
+    threadView: {
+        backgroundColor: "white",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        flex: 1,
+      },
     thread: {
         flexDirection: "row",
         padding: 10,
@@ -229,13 +235,17 @@ const ThreadModal = (props) => {
     return (
         <Modal
             animationType="slide"
-            transparent={false}
+            transparent={true}
             visible={props.selectedThread ? true : false}
         >
-            <SafeAreaView style = {{flex: 1}}>
-                <TouchableOpacity style = {styles.header} onPress = {() => props.setSelectedThread(null)}>
-                    <FeatherIcon name = "chevron-left" size = {30}/>
-                </TouchableOpacity>
+             <TouchableOpacity style = {{height: "12.5%"}} onPress={() => props.setDisplayAllThreads(false)}>
+        </TouchableOpacity>
+            <SafeAreaView style = {styles.threadView}>
+                <View style = {{paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center", paddingTop: 20,}}>
+                    <TouchableOpacity style = {styles.header} onPress = {() => props.setSelectedThread(null)}>
+                        <FeatherIcon name = "chevron-down" size = {35}/>
+                    </TouchableOpacity>
+                </View>
                 <ScrollView style = {styles.scrollView}>
                     <View style = {styles.thread}>
                         <View style = {styles.voteContainer}>

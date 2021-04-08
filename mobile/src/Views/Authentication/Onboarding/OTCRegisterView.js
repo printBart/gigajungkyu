@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
+        marginLeft: 10,
 
         elevation: 3,
         padding: 5,
@@ -114,7 +115,7 @@ const OTCRegisterView = ({navigation, route}) => {
                     />
                     {validIndicator &&
                         <Text style = {styles.validText}>Wrong code. Please try again</Text>}
-                    <TouchableOpacity style = {[styles.continueButton,  passcode.length <4 && {backgroundColor: "#e8e8e8"}]} onPress = {() => navigation.navigate("password")}>
+                    <TouchableOpacity style = {[styles.continueButton,  passcode.length <4 && {backgroundColor: "#e8e8e8"}]}>
                         <Text style = {styles.continueButtonText}>Continue</Text>
                     </TouchableOpacity>
                 </View>

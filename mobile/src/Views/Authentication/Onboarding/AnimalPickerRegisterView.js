@@ -5,8 +5,9 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    TextInput
 } from 'react-native';
+
+import * as firebase from "firebase";
 
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -57,7 +58,29 @@ const styles = StyleSheet.create({
 });
 
 const AnimalPickerRegisterView = ({route, navigation}) => {
+    const [loading, setLoading] = React.useState(false);
     const [spiritAnimal, setSpiritAnimal] = React.useState("");
+
+    const registerUser = () => {
+        setLoading(true);
+        firebase.auth()
+        .createUserWithEmailAndPassword(route.params.email, route.params.password)
+        .then((user) => {
+            console.log('User account created & signed in!');
+            registerUser();
+        })
+        .catch(error => {
+            if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+            }
+
+            if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+            }
+
+            console.error(error);
+        });
+    }
 
     return (
         <SafeAreaView style = {{flex: 1, backgroundColor: "white",}}>
@@ -70,40 +93,40 @@ const AnimalPickerRegisterView = ({route, navigation}) => {
                 </View>
                 <View style = {styles.animalSelectorView}>
                     <View style = {styles.row}>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐵" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐵")}>
                             <Text style = {styles.animalEmoji}>🐵</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🦊" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🦊")}>
                             <Text style = {styles.animalEmoji}>🦊</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐯" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐯")}>
                             <Text style = {styles.animalEmoji}>🐯</Text>
                         </TouchableOpacity>
                     </View>
                     <View style = {styles.row}>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🦄" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🦄")}>
                             <Text style = {styles.animalEmoji}>🦄</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐻" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐻")}>
                             <Text style = {styles.animalEmoji}>🐻</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐶" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐶")}>
                             <Text style = {styles.animalEmoji}>🐶</Text>
                         </TouchableOpacity>
                     </View>
                     <View style = {styles.row}>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐹" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐹")}>
                             <Text style = {styles.animalEmoji}>🐹</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐰" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐰")}>
                             <Text style = {styles.animalEmoji}>🐰</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {styles.animalSelectBtn}>
+                        <TouchableOpacity style = {[styles.animalSelectBtn, spiritAnimal === "🐼" && {backgroundColor: "#7367FF"}]} onPress = {() => setSpiritAnimal("🐼")}>
                             <Text style = {styles.animalEmoji}>🐼</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-                <TouchableOpacity style = {styles.continueButton}>
+                <TouchableOpacity style = {styles.continueButton} onPress = {registerUser}>
                     <Text style = {styles.continueButtonText}>Continue</Text>
                 </TouchableOpacity>
             </View>

@@ -4,10 +4,12 @@ import {
     View,
     Text,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import * as firebase from 'firebase';
 
 const styles = StyleSheet.create({
     login: {
@@ -54,6 +56,25 @@ const LoginView = ({navigation}) => {
 
     const passwordInputRef = useRef();
 
+    const loginUser = () => {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+           .catch((error) => {
+            Alert.alert(
+                "Forgotten password for " + email + "?",
+                error,
+                [
+                  {
+                    text: "Try again",
+                    onPress: () =>  passwordInputRef.current.focus(),
+                    style: "cancel"
+                  },
+                  { text: "Send Email", onPress: () => console.log("Send Email") }
+                ],
+                { cancelable: false }
+              );
+           });
+    }
+
     return (
         <SafeAreaView style = {{flex: 1, backgroundColor: "white"}}>
             <TouchableOpacity style = {styles.header} onPress = {() => navigation.navigate("main")}>
@@ -74,16 +95,16 @@ const LoginView = ({navigation}) => {
                     />
                     <TextInput
                         style = {styles.textInput}
-                        onChangeText={text => onChangeEmail(text)}
-                        value={email}
+                        onChangeText={text => onChangePassword(text)}
+                        value={password}
                         placeholder = "••••••••••"
                         secureTextEntry={true}
                         autoCapitalize = "none"
-                        autoFocus = {true}
+                        autoFocus = {false}
                         ref = {passwordInputRef}
                     />
                 </View>
-                <TouchableOpacity style = {styles.loginBtn}>
+                <TouchableOpacity style = {styles.loginBtn} onPress = {loginUser}>
                     <Text style = {styles.buttonText}>Login</Text>
                 </TouchableOpacity>
             </View>

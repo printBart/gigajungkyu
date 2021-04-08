@@ -57,14 +57,13 @@ const styles = StyleSheet.create({
     }
 });
 
-const EmailRegisterView = ({navigation, route}) => {
+const EmailRegisterView = ({navigation}) => {
     const [email, onChangeEmail] = React.useState("");
     const [validIndicator, onChangeValidIndicator] = React.useState(false);
 
     const submitEmail = () => {
         //if(validateEmail(email)){
             navigation.navigate('otc', {
-                ...route.params,
                 email,
             });
         // } else {
