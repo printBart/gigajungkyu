@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
 
 let socket;
 
-const MapView = () => {
+const MapView = ({navigation}) => {
   const [currentUsers, updateCurrentUsers] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
@@ -260,7 +260,7 @@ const MapView = () => {
       </SafeAreaView>
 
       <SafeAreaView  style = {{position: "absolute", top: 50, right: 10}}>
-        <TouchableOpacity style ={styles.sendButton} onPress = {() => setProfileVisible(true)}>
+        <TouchableOpacity style ={styles.sendButton} onPress = {() => navigation.navigate("message")}>
           <Icon name = "send" size={27}/>
         </TouchableOpacity>
       </SafeAreaView>

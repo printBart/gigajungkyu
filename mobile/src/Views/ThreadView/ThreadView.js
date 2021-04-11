@@ -98,21 +98,18 @@ const ThreadView = (props) => {
           <FeatherIcon name = "edit" size = {27}/>
         </TouchableOpacity>
       </View>
-      <View style = {{padding: 20, paddingTop: 0}}>
-        <Text style = {styles.header}>👋 Welcome!</Text>
-      </View>
-      <View style = {styles.filterMenu}>
-        <TouchableOpacity style = {styles.filterBtn}>
-          <Text style = {styles.filterBtnText}>Hot</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style = {styles.filterBtn}>
-          <Text style = {styles.filterBtnText}>New</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style = {styles.filterBtn}>
-          <Text style = {styles.filterBtnText}>Top</Text>
-        </TouchableOpacity>
-      </View>
       <ScrollView style = {styles.threadContainer}>
+        <View style = {styles.filterMenu}>
+          <TouchableOpacity style = {styles.filterBtn}>
+            <Text style = {styles.filterBtnText}>Hot</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style = {styles.filterBtn}>
+            <Text style = {styles.filterBtnText}>New</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style = {styles.filterBtn}>
+            <Text style = {styles.filterBtnText}>Top</Text>
+          </TouchableOpacity>
+        </View>
         {allPosts.map((post) => {
           return(
             <ThreadPreview

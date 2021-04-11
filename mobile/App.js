@@ -10,6 +10,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashView from './src/Views/SplashView/SplashView';
 import MapView from './src/Views/MapView/MapView';
 import AuthenticationStack from './src/Views/Authentication/AuthenticationStack';
+import Router from './Router';
+import MessageView from './src/Views/MessageView/MessageView';
 
 var firebaseConfig = {
   apiKey: token.REACT_APP_FIREBASE_KEY,
@@ -40,11 +42,27 @@ const App = () => {
             options = {{headerShown: false}}/>
         <Stack.Screen
           name="router"
-          component={MapView}
+          component={MapStack}
           options = {{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+const MapStack = () => {
+  const Stack = createStackNavigator();
+  return(
+    <Stack.Navigator screenOptions = {{headerShown: false}}>
+      <Stack.Screen
+        name = "map"
+        component = {MapView}
+        options = {{headerShown: false}}/>
+      <Stack.Screen
+        name = "message"
+        component = {MessageView}
+        options = {{headerShown: false}}/>
+    </Stack.Navigator>
+  )
 }
 
 export default App;

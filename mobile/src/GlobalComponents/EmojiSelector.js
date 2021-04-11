@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     View,
     Text,
     TouchableOpacity,
 } from 'react-native';
+
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import EmojiSelectorModal from './EmojiSelectorModal';
 
 const styles = StyleSheet.create({
     emojiSelector: {
@@ -32,6 +35,7 @@ const styles = StyleSheet.create({
 });
 
 const EmojiSelector = (props) => {
+    const [displayFullEmojiModal, setDisplayFullEmojiModal] = useState(false); 
   return (
     <View style = {styles.emojiSelector}>
         <TouchableOpacity onPress = {() => props.setCurrentEmoji("😀")}>
@@ -55,9 +59,13 @@ const EmojiSelector = (props) => {
         <TouchableOpacity onPress = {() => props.setCurrentEmoji("🤝")}>
             <Text style = {styles.emoji}>🤝</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress = {() => props.setCurrentEmoji("👏")}>
-            <Text style = {styles.emoji}>👏</Text>
+        <TouchableOpacity style = {{backgroundColor: "#f5f5f5", width: 35, height: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 5,}}
+            onPress = {() => setDisplayFullEmojiModal(true)}>
+            <FeatherIcon name = "plus" size = {25} color = "gray"/>
         </TouchableOpacity>
+        <EmojiSelectorModal
+            displayModal = {displayFullEmojiModal}
+            setModal = {setDisplayFullEmojiModal}/>
     </View>
   );
 }
