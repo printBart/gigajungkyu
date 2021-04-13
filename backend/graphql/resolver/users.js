@@ -17,7 +17,8 @@ module.exports = {
                 token: token,
                 email: email,
                 faculty: faculty,
-                username: username
+                username: username,
+                points: 0,
             });
 
             //store user variable of type User to db

@@ -34,7 +34,13 @@ const postSchema = new Schema({
     isNightmode: {
         type: Boolean,
         required: false,
-    }
+    },
+    votes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Vote'
+        }
+    ],
 });
 
 module.exports = mongoose.model('Post', postSchema);

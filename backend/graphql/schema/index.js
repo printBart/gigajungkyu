@@ -7,6 +7,7 @@ type User{
     email: String!
     username: String!
     faculty: String
+    points: Float!
 }
 
 type Post{
@@ -33,6 +34,14 @@ type Comment{
     childComments: [Comment]!
 }
 
+type Vote {
+    _id: ID!
+    voter: User!
+    post: Post!
+    value: Int!
+    date: String!
+}
+
 type RootQuery{
     getUserByToken(token: String!): User!
     getAllPosts: [Post]!
@@ -45,6 +54,7 @@ type RootMutation{
     registerUser(token: String!, email: String!, faculty: String):  User!
     createPost(title: String!, description: String!, creator: String, latitude: Float!, longitude: Float!, emoji: String!, isNightmode: Boolean): Post!
     createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
+    voteThread(voter: String!, thread: String!, value: Int!): Vote!
 }
 
 schema {
