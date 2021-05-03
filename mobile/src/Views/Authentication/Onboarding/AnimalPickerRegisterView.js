@@ -10,6 +10,8 @@ import {
 import * as firebase from "firebase";
 
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import { postRequest } from '../../../GlobalFunctions/request';
+import { registerUserQuery } from '../../../GlobalFunctions/queries';
 
 const styles = StyleSheet.create({
     emailOnboardingView: {
@@ -66,19 +68,34 @@ const AnimalPickerRegisterView = ({route, navigation}) => {
         firebase.auth()
         .createUserWithEmailAndPassword(route.params.email, route.params.password)
         .then((user) => {
-            console.log('User account created & signed in!');
-            registerUser();
+            createUser();
+
         })
         .catch(error => {
             if (error.code === 'auth/email-already-in-use') {
-            console.log('That email address is already in use!');
+                console.log('That email address is already in use!');
             }
 
             if (error.code === 'auth/invalid-email') {
-            console.log('That email address is invalid!');
+                console.log('That email address is invalid!');
             }
 
             console.error(error);
+        });
+    }
+
+    const createUser = () => {
+        const token = firebase.auth().currentUser.uid;
+        var request = postRequest(
+            registerUserQuery(token, route.params.email, "Computer Engineering"),
+            "/graphql"
+        );
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                if(data.errors){
+                    firebase.auth().currentUser.delete()
+                }
+            })
         });
     }
 

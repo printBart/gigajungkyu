@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { createPostQuery } from '../GlobalFunctions/queries';
 import { postRequest } from '../GlobalFunctions/request';
+import * as firebase from "firebase";
 
 import EmojiSelector from './EmojiSelector';
 
@@ -82,12 +83,12 @@ const CreateThreadModal = (props) => {
   const [currentEmoji, setCurrentEmoji] = React.useState("😀");
 
   const postThread = () => {
-    console.log("retrieving all posts");
+    const token = firebase.auth().currentUser.uid;
     var request = postRequest(
       createPostQuery(
         title,
         description,
-        "lK5Apx1GNsaDw8UZK8zpJnRTNR33",
+        token,
         props.currentLocation.coords.longitude,
         props.currentLocation.coords.latitude,
         currentEmoji
@@ -96,7 +97,6 @@ const CreateThreadModal = (props) => {
     );
     fetch(request).then((response) => {
       response.json().then((data) => {
-        console.log(data);
         props.emitThread();
         resetThreadInputs();
         props.setDisplayThread(false);

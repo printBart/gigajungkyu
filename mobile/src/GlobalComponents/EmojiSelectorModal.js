@@ -54,9 +54,9 @@ const EmojiSelectorModal = (props) => {
             </View>
             <ScrollView>
                 <View style = {styles.emojiContainer}>
-                    {emojiList.map((emoji) => {
+                    {emojiList.map((emoji, index) => {
                         return(
-                            <TouchableOpacity style = {styles.emojiBtn}>
+                            <TouchableOpacity key = {index} style = {styles.emojiBtn}>
                                 <Text style = {{fontSize: 50}}>{emoji.emoji}</Text>
                             </TouchableOpacity>
                         )

@@ -13,10 +13,11 @@ import { convertDeltaMilisToTime } from '../../../GlobalFunctions/date';
 const styles = StyleSheet.create({
     threadPreview: {
         flex: 1,
-        flexDirection: "row",
+        flexDirection: "column",
         backgroundColor: "white",
-        padding: 10,
-        borderRadius: 10,
+        padding: 15,
+        paddingHorizontal: 20,
+        borderRadius: 20,
         margin: 10,
         width: 350,
         shadowColor: "#000",
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     threadDescription: {
-        paddingVertical: 15,
+        paddingTop: 10,
         fontSize: 15,
         overflow: "hidden",
     },
@@ -76,29 +77,9 @@ const styles = StyleSheet.create({
 const ThreadPreview = (props) => {
     return (
         <TouchableOpacity style = {styles.threadPreview} onPress =  {() => props.setSelectedThread(props.post)}>
-            <View style = {styles.voteContainer}>
-                <TouchableOpacity>
-                    <FeatherIcon name="chevron-up" size={35} color = {"lightgray"}/>
-                </TouchableOpacity>
-                <Text style= {{fontSize: 15, fontWeight: "600"}}>83</Text>
-                <TouchableOpacity>
-                    <FeatherIcon name="chevron-down" size={35} color = {"lightgray"}/>
-                </TouchableOpacity>
-            </View>
-            <View style = {styles.threadBodyContainer}>
-                <View>
-                    <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
-                </View>
+                <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
                 <Text style = {styles.threadDescription} numberOfLines = {2} ellipsizeMode="tail">{props.post.description}</Text>
-                <View style = {styles.footer}>
-                    <View style = {styles.footerLeft}>
-                        <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
-                        <Text style ={styles.footerRight}>&nbsp;Comments</Text>
-                    </View>
-                    <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.post.date)} ago</Text>
-                </View>
-            </View>
-            <View style = {styles.triangle}></View>
+                <View style = {styles.triangle}></View>
         </TouchableOpacity>
     );
 }

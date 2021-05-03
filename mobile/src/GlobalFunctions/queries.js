@@ -1,3 +1,13 @@
+export function registerUserQuery(token, email, faculty){
+    return {
+        query:
+        `mutation{
+            registerUser(token: "${token}", email: "${email}", faculty: "${faculty}"){
+              _id
+            }
+        }`
+    }
+}
 export function getAllPostsQuery(){
     return{
         query:
@@ -174,4 +184,13 @@ export function createCommentQuery(description, creator, latitude, longitude, po
             }
         }`
     }
+}
+
+export function voteThread(voter, thread, value){
+    query:
+    `mutation{
+        voteThread(voter: "${voter}", thread: "${thread}", value: ${value}){
+          _id
+        }
+    }`
 }

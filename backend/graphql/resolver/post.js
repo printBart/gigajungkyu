@@ -28,6 +28,7 @@ module.exports = {
     getAllPosts: async() => {
         try{
             const posts = await Post.find().populate('creator');
+            console.log(posts);
             return posts;
 
         } catch(err){

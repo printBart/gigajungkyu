@@ -193,7 +193,7 @@ const MapView = ({navigation}) => {
     setDisplayAllThreads(false);
     setDisplayThread(true);
   }
-  
+
   return (
     <View style={styles.page}>
       <View style={styles.container}>
