@@ -2,7 +2,7 @@ const User = require('../../models/User');
 
 module.exports = {
     //register single user
-    registerUser: async({ token, email, faculty }) => {
+    registerUser: async({ token, email, faculty, emoji }) => {
         try{
             var username;
             while (true){
@@ -18,6 +18,7 @@ module.exports = {
                 email: email,
                 faculty: faculty,
                 username: username,
+                emoji: emoji,
                 points: 0,
             });
 

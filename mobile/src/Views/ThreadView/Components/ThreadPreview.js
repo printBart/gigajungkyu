@@ -84,7 +84,7 @@ const ThreadPreview = (props) => {
                 <View style = {styles.footer}>
                     <View style = {styles.footerLeft}>
                         <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
-                        <Text style ={styles.footerRight}>&nbsp;10 Comments</Text>
+                        <Text style ={styles.footerRight}>&nbsp;Comments</Text>
                     </View>
                     <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(Number(props.post.date))} ago</Text>
                 </View>

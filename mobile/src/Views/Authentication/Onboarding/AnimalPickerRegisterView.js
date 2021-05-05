@@ -87,7 +87,7 @@ const AnimalPickerRegisterView = ({route, navigation}) => {
     const createUser = () => {
         const token = firebase.auth().currentUser.uid;
         var request = postRequest(
-            registerUserQuery(token, route.params.email, "Computer Engineering"),
+            registerUserQuery(token, route.params.email, "Computer Engineering", spiritAnimal),
             "/graphql"
         );
         fetch(request).then((response) => {

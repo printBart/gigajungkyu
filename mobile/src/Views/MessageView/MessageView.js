@@ -2,34 +2,40 @@ import React from 'react';
 import {
     StyleSheet,
     View,
-    Text,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal
 } from 'react-native';
 
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MessageContainer from './Components/MessageContainer';
+import Icon from 'react-native-vector-icons/Feather';
 
 const styles = StyleSheet.create({
 });
 
-const MessageView = ({navigation}) => {
+const MessageModal = (props) => {
   return (
-      <SafeAreaView>
-            <View style= {{padding: 10, flexDirection: "row", justifyContent: "space-between"}}>
-                <TouchableOpacity style = {styles.header} onPress = {() => navigation.goBack()}>
-                    <FontAwesome5Icon name = "chevron-left" size = {30} color = "#e8e8e8"/>
-                </TouchableOpacity>
-                <Text style = {{fontSize: 20, fontWeight: "500"}}>Message</Text>
-                <Text>     </Text>
+    <Modal
+        transparent={true}
+        visible={props.visible ? true : false}
+    >
+        <SafeAreaView style = {{flex: 1}}>
+            <View style = {{backgroundColor: "white", flex: 1, margin: 10, marginTop: 0, borderRadius: 10}}>
+                <View style= {{padding: 20, flexDirection: "row", justifyContent: "flex-end"}}>
+                    <TouchableOpacity style = {styles.header} onPress = {() => props.setVisible(false)}>
+                        <Icon name = "send" size={27}/>
+                    </TouchableOpacity>
+                </View>
+                {[1,2,3].map((user, index) => {
+                    return(
+                        <MessageContainer
+                            key = {index}/>
+                    )
+                })}
             </View>
-            {[1,2,3].map((user, index) => {
-                return(
-                    <MessageContainer />
-                )
-            })}
-      </SafeAreaView>
+        </SafeAreaView>
+    </Modal>
   );
 }
 
-export default MessageView;
+export default MessageModal;

@@ -13,6 +13,7 @@ import io from "socket.io-client";
 
 import token from '../../../token.json';
 import Icon from 'react-native-vector-icons/Feather';
+import * as firebase from 'firebase';
 
 //components
 import CreateThreadModal from '../../GlobalComponents/CreateThreadModal';
@@ -21,6 +22,8 @@ import ThreadModal from '../../GlobalComponents/ThreadModal';
 import ThreadView from '../ThreadView/ThreadView';
 import ProfileModal from '../../GlobalComponents/ProfileModal';
 import BottomModalPreview from './Components/BottomModalPreview';
+import MessageModal from '../MessageView/MessageView';
+import UserProfilePreview from './Components/UserProfilePreview';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -148,9 +151,11 @@ let socket;
 
 const MapView = ({navigation}) => {
   const [currentUsers, updateCurrentUsers] = useState([]);
+  const [currentUserProfile, updateCurrentUserProfile] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [displayThread, setDisplayThread] = useState(false);
   const [profileVisible, setProfileVisible] = useState(false);
+  const [messageVisible, setMessageVisible] = useState(false);
   const [livePosts, setLivePosts] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [displayAllThreads, setDisplayAllThreads] = useState(null);
@@ -164,6 +169,7 @@ const MapView = ({navigation}) => {
     });
 
     socket.on('displayCurrentUsers', (onlineUsers) => {
+      console.log(onlineUsers);
       updateCurrentUsers(onlineUsers);
   })
     emitThread();
@@ -182,8 +188,10 @@ const MapView = ({navigation}) => {
   }
 
   const sendUserLocation = (longitude, latitude) => {
+    const token = firebase.auth().currentUser.uid;
+    console.log(token);
     socket.emit('sendUserLocation', {
-      userToken: "lK5Apx1GNsaDw8UZK8zpJnRTNR33",
+      userToken: token,
       longitude,
       latitude
     })
@@ -210,18 +218,7 @@ const MapView = ({navigation}) => {
               followUserLocation = {true}>
             </MapboxGL.Camera>
        
-              {currentLocation &&
-              <MapboxGL.PointAnnotation
-                key="pointAnnotation"
-                id="pointAnnotation"
-                tracksViewChanges={false}
-                coordinate={[currentLocation.coords.longitude, currentLocation.coords.latitude]}>
-                <TouchableOpacity style = {{alignItems: "center"}}>
-                  <Text style = {{fontSize: 15, position: 'absolute', top: -5, zIndex: 2}}>👑</Text>
-                  <Text style = {{fontSize: 30}}>🐶</Text>
-                </TouchableOpacity>
-              </MapboxGL.PointAnnotation>}
-              {livePosts.map((post) => {
+            {livePosts.map((post) => {
                 return(
                   <MapboxGL.PointAnnotation
                     key = {post._id}
@@ -233,6 +230,31 @@ const MapView = ({navigation}) => {
                       <ThreadPreview
                         post = {post}
                         setSelectedThread = {setSelectedThread}/>
+                  </MapboxGL.PointAnnotation>
+                )
+              })}
+              {currentUserProfile &&
+                <MapboxGL.PointAnnotation
+                    key = {"currentUserProfile"}
+                    id = {"currentUserProfile"}
+                    tracksViewChanges={false}
+                    coordinate={[currentUserProfile.longitude, currentUserProfile.latitude]}
+                    anchor = {{x: 0.45, y: 1.7}}
+                    >
+                      <UserProfilePreview
+                        currentUserProfile = {currentUserProfile}/>
+                  </MapboxGL.PointAnnotation>
+              }
+              {currentUsers.map((currentUser, index) => {
+                return(
+                  <MapboxGL.PointAnnotation
+                    key={currentUser._id}
+                    id={currentUser._id}
+                    tracksViewChanges={false}
+                    coordinate={[currentUser.longitude, currentUser.latitude]}>
+                    <TouchableOpacity style = {{alignItems: "center"}} onPress = {() => updateCurrentUserProfile(prevState => prevState?._id == currentUser._id ? null : currentUser)}>
+                      <Text style = {{fontSize: 30}}>{currentUser.emoji ? currentUser.emoji : "🐶"}</Text>
+                    </TouchableOpacity>
                   </MapboxGL.PointAnnotation>
                 )
               })}
@@ -260,7 +282,7 @@ const MapView = ({navigation}) => {
       </SafeAreaView>
 
       <SafeAreaView  style = {{position: "absolute", top: 50, right: 10}}>
-        <TouchableOpacity style ={styles.sendButton} onPress = {() => navigation.navigate("message")}>
+        <TouchableOpacity style ={styles.sendButton} onPress = {() => setMessageVisible(true)}>
           <Icon name = "send" size={27}/>
         </TouchableOpacity>
       </SafeAreaView>
@@ -268,6 +290,9 @@ const MapView = ({navigation}) => {
       <ProfileModal
         visible = {profileVisible}
         setVisible = {setProfileVisible}/>
+      <MessageModal
+        visible = {messageVisible}
+        setVisible = {setMessageVisible}/>
       <BottomModalPreview
         setDisplayThread = {setDisplayThread}
         setDisplayAllThreads = {setDisplayAllThreads}/>

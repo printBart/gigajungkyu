@@ -35,6 +35,10 @@ const postSchema = new Schema({
         type: Boolean,
         required: false,
     },
+    voteValue: {
+        type: Number, 
+        reqyured: true,
+    },
     votes: [
         {
             type: Schema.Types.ObjectId,

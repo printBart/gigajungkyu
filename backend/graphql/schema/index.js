@@ -7,6 +7,7 @@ type User{
     email: String!
     username: String!
     faculty: String
+    emoji: String
     points: Float!
 }
 
@@ -51,7 +52,7 @@ type RootQuery{
 }
 
 type RootMutation{
-    registerUser(token: String!, email: String!, faculty: String):  User!
+    registerUser(token: String!, email: String!, faculty: String, emoji: String!):  User!
     createPost(title: String!, description: String!, creator: String, latitude: Float!, longitude: Float!, emoji: String!, isNightmode: Boolean): Post!
     createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
     voteThread(voter: String!, thread: String!, value: Int!): Vote!

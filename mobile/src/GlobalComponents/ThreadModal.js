@@ -8,6 +8,7 @@ import {
     ScrollView,
     TouchableOpacity,
 } from 'react-native';
+import * as firebase from 'firebase';
 
 
 //icons
@@ -16,7 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 //funcitons
 import { postRequest } from '../GlobalFunctions/request';
-import { getAllCommentsByPostIdQuery, getChildCommentsByCommentId } from '../GlobalFunctions/queries';
+import { getAllCommentsByPostIdQuery, getChildCommentsByCommentId, voteThreadQuery } from '../GlobalFunctions/queries';
 import CommentModal from './CommentModal';
 import { convertDeltaMilisToTime } from '../GlobalFunctions/date';
 
@@ -219,7 +220,7 @@ const ThreadModal = (props) => {
         });
     }
 
-    const loadTraversedComments = (nodes, layer, parentNodeId) =>{
+    const loadTraversedComments = (nodes, layer, parentNodeId) => {
         const result = []
         inOrderTraversal(nodes, layer, result);
         const parentIndex = comments.findIndex(comment => comment._id === result[0]._id);
@@ -230,6 +231,19 @@ const ThreadModal = (props) => {
         let pp = combArr.filter( (ele, ind) => ind === combArr.findIndex( elem => elem._id === ele._id));
         //NOTE: still need to filter out leaf node data
         setComments(pp);
+    }
+
+    const voteThread = (value) => {
+        const token = firebase.auth().currentUser.uid;
+        var request = postRequest(
+            voteThreadQuery(token, props.selectedThread._id, value),
+            "/graphql"
+        );
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                console.log(data);
+            })
+        })
     }
 
     return (
@@ -249,11 +263,11 @@ const ThreadModal = (props) => {
                 <ScrollView style = {styles.scrollView}>
                     <View style = {styles.thread}>
                         <View style = {styles.voteContainer}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress = {() => voteThread(1)}>
                                 <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
                             </TouchableOpacity>
-                            <Text style={{fontSize: 15, fontWeight: "600"}}>83</Text>
-                            <TouchableOpacity>
+                            <Text style={{fontSize: 15, fontWeight: "600"}}>{props.selectedThread.voteValue}</Text>
+                            <TouchableOpacity onPress = {() => voteThread(-1)}>
                                 <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
                             </TouchableOpacity>
                         </View>
@@ -263,7 +277,7 @@ const ThreadModal = (props) => {
                             <View style = {styles.footer}>
                                 <TouchableOpacity style = {styles.footerItem}>
                                     <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
-                                    <Text style ={styles.footerLeft}>&nbsp;10 Comments</Text>
+                                    <Text style ={styles.footerLeft}>&nbsp;Comments</Text>
                                 </TouchableOpacity>
                                 <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.selectedThread.date)} ago</Text>
                             </View>

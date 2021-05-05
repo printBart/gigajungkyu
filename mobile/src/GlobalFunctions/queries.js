@@ -1,8 +1,8 @@
-export function registerUserQuery(token, email, faculty){
+export function registerUserQuery(token, email, faculty, emoji){
     return {
         query:
         `mutation{
-            registerUser(token: "${token}", email: "${email}", faculty: "${faculty}"){
+            registerUser(token: "${token}", email: "${email}", faculty: "${faculty}", emoji: "${emoji}"){
               _id
             }
         }`
@@ -186,11 +186,16 @@ export function createCommentQuery(description, creator, latitude, longitude, po
     }
 }
 
-export function voteThread(voter, thread, value){
-    query:
-    `mutation{
-        voteThread(voter: "${voter}", thread: "${thread}", value: ${value}){
-          _id
-        }
-    }`
+export function voteThreadQuery(voter, thread, value){
+    console.log(voter);
+    console.log(thread);
+    console.log(value);
+    return{
+        query:
+        `mutation{
+            voteThread(voter: "${voter}", thread: "${thread}", value: ${value}){
+            _id
+            }
+        }`
+    }
 }

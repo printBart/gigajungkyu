@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     View,
@@ -10,6 +10,7 @@ import {
 
 
 import * as firebase from 'firebase';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     profileView: {
@@ -57,6 +58,43 @@ const styles = StyleSheet.create({
     
           elevation: 10,
     },
+    characterSelector: {
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "row",
+        shadowColor: "#000",
+        borderRadius: 25,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+        width: "100%",
+    },
+    emojiBtn: {
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+    },
+    schoolSelector:{
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "row",
+        shadowColor: "#000",
+        borderRadius: 25,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+        width: "100%",
+        padding: 10
+    },
     logoutBtn: {
         backgroundColor: "#7367FF",
         padding: 10,
@@ -65,6 +103,7 @@ const styles = StyleSheet.create({
 });
 
 const ProfileModal = (props) => {
+    const [selector, setSelector] = useState(false);
     const logoutUser = async() => {
         props.setVisible(false)
         try{
@@ -82,10 +121,52 @@ const ProfileModal = (props) => {
                 <SafeAreaView style={{display: 'flex', flex: 1}}>
                     <View style = {styles.profileView}>
                         <View style = {styles.header}>
-                            <TouchableOpacity style ={styles.profileButton}>
+                            {!selector ? 
+                            <TouchableOpacity style ={styles.profileButton} onPress = {() => setSelector(true)}>
                                 <Text style ={{fontSize: 30}}>🐶</Text>
+                            </TouchableOpacity> : 
+                            <View style = {styles.characterSelector}>
+                                <TouchableOpacity style = {[styles.emojiBtn, {paddingLeft: 10, borderRightWidth: 0.5, borderColor: "gray"}]} onPress = {() => setSelector(false)}>
+                                    <Text style ={{fontSize: 30}}>🐶</Text>
+                                </TouchableOpacity>
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator = {false}>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🐵</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🐶</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🦊</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🐺</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🐯</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🦄</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style = {styles.emojiBtn}>
+                                        <Text style ={{fontSize: 30}}>🐮</Text>
+                                    </TouchableOpacity>
+                                </ScrollView> 
+                            </View>}
+                        </View>
+                        <View style = {styles.schoolSelector}>
+                            <Text style = {{fontSize: 17}}>University of British Columbia</Text>
+                        </View>
+                        <View style = {{flexDirection: "row", borderRadius: 25, backgroundColor: "#f5f5f5", padding: 15}}>
+                            <TouchableOpacity style = {{flex: 1, alignItems: "center"}}>
+                                <Text style = {{fontSize: 15}}>😎 Vibe Mode</Text>
                             </TouchableOpacity>
-                            <View style={{flex: 1}}></View>
+                            <TouchableOpacity style = {{flex: 1, alignItems: "center"}}>
+                                <Text style = {{fontSize: 15}}>👻 Ghost Mode</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <Text style = {{fontSize: 15,}}>This is my bio. DM me if you want to talk :)</Text>
                         </View>
                         <TouchableOpacity style = {styles.logoutBtn} onPress = {logoutUser}>
                             <Text style = {{textAlign: "center", fontSize: 20, fontWeight: "bold", color: "white"}}>Logout</Text>

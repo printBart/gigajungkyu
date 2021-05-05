@@ -74,8 +74,7 @@ mongoose.connect(
                 io.emit("displayCurrentUsers", onlineUsers);
             }
             else{
-                graphqlResolver.getUserByToken({token: userLocationData.userToken}).then((user) => {
-                    const userData = {
+                graphqlResolver.getUserByToken({token: userLocationData.userToken}).then((user) => {                    const userData = {
                         ...user._doc,
                         longitude: userLocationData.longitude,
                         latitude: userLocationData.latitude

@@ -8,14 +8,13 @@ const ObjectId = mongoose.Types.ObjectId;
 module.exports = {
     voteThread: async({ voter, thread, value }) => {
         try{
-            const voterUser = await User.findById(voter);
+            const voterUser = await User.findOne({token: voter});
             const post = await Post.findById(thread);
             const posterUser = await User.findById(post.creator);
             if(!voterUser){
                 throw new Error('User not found in database');
             }
-
-            let alreadyVote = await Vote.aggregate([{$match: {post: ObjectId(thread), voter: ObjectId(voter)  }}]);
+            let alreadyVote = await Vote.aggregate([{$match: {post: ObjectId(thread), voter: voterUser}}]);
             let result;
             if(alreadyVote.length > 0){
                 const vote = await Vote.findById(alreadyVote[0]._id);
@@ -33,20 +32,18 @@ module.exports = {
                 result = await vote.save();
             } else{
                 const vote = await Vote({
-                    voter: voter,
-                    post: thread,
+                    voter: voterUser,
+                    post: post,
                     value: value,
                     date: new Date().toISOString(),
                 });
-
                 result = await vote.save();
-
-                const post = await Post.findById(thread);
 
                 if(!post){
                     throw new Error('User not found in database');
                 }
                 post.votes.push(result);
+                post.voteValue = post.voteValue + value;
                 await post.save();
                 posterUser.points = await posterUser.points + value;
                 await posterUser.save();

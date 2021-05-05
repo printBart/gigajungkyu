@@ -15,7 +15,8 @@ module.exports = {
                 longitude: longitude,
                 emoji,
                 date: new Date(),
-                isNightmode: isNightmode
+                voteValue: 0,
+                isNightmode: false
             });
             const createdPost = await post.save();
 
@@ -28,7 +29,6 @@ module.exports = {
     getAllPosts: async() => {
         try{
             const posts = await Post.find().populate('creator');
-            console.log(posts);
             return posts;
 
         } catch(err){

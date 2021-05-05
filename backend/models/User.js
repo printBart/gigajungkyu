@@ -19,10 +19,14 @@ const userSchema = new Schema({
         type: String,
         required: false,
     },
+    emoji: {
+        type: String,
+        required: false,
+    },
     points: {
         type: Number,
         required: true,
-    }
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);

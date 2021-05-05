@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {
   StyleSheet,
 } from "react-native";
+
 import AuthenticationView from './AuthenticationView';
 import LoginView from './LoginView';
 import EmailRegisterView from './Onboarding/EmailRegisterView';
