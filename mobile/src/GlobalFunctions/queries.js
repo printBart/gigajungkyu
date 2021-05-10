@@ -187,14 +187,31 @@ export function createCommentQuery(description, creator, latitude, longitude, po
 }
 
 export function voteThreadQuery(voter, thread, value){
-    console.log(voter);
-    console.log(thread);
-    console.log(value);
     return{
         query:
         `mutation{
             voteThread(voter: "${voter}", thread: "${thread}", value: ${value}){
             _id
+            }
+        }`
+    }
+}
+
+export function getAllMessagesByRoom(senderToken, receiverToken){
+    return{
+        query:
+        `query{
+            getAllMessagesByRoom(senderToken: "${senderToken}", receiverToken: "${receiverToken}"){
+              _id
+              senderToken{
+                _id
+              }
+              receiverToken{
+                _id
+              }
+              message
+              room
+              date
             }
         }`
     }

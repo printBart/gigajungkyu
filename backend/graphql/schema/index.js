@@ -43,12 +43,22 @@ type Vote {
     date: String!
 }
 
+type Message {
+    _id: ID!
+    senderToken: User
+    receiverToken: User
+    message: String
+    room: String!
+    date: String!
+}
+
 type RootQuery{
     getUserByToken(token: String!): User!
     getAllPosts: [Post]!
     getAllCommentsByPostId(postId: String!): [Comment]!
     getChildCommentsByCommentId(commentId: String!): [Comment]!
     getAllRecentComments: [Comment]!
+    getAllMessagesByRoom(senderToken: String!, receiverToken: String!): [Message]
 }
 
 type RootMutation{
@@ -56,6 +66,7 @@ type RootMutation{
     createPost(title: String!, description: String!, creator: String, latitude: Float!, longitude: Float!, emoji: String!, isNightmode: Boolean): Post!
     createComment(description: String!, creator: String!, latitude: Float!, longitude: Float!, postId: String!, parentComment: String): Comment!
     voteThread(voter: String!, thread: String!, value: Int!): Vote!
+    createMessage(senderToken: String!, receiverToken: String!, message: String!): Message!
 }
 
 schema {

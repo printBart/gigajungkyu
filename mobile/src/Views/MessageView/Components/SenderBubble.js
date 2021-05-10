@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const SenderBubble = () => {
+const SenderBubble = (props) => {
   return (
     <View style = {styles.senderBubble}>
       <View style = {styles.senderBubbleView}>
-        <Text style = {styles.messageText}>Template Viewsaaaaaasdfasdfasdfdsadfasdfsdfsdasdfasdffsdasdfasdfsadfsdafasdfasdfasdffasdfasdfds</Text>
+        <Text style = {styles.messageText}>{props.text}</Text>
       </View>
     </View>
   );

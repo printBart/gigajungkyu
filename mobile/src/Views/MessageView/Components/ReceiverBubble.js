@@ -32,15 +32,12 @@ const styles = StyleSheet.create({
     }
 });
 
-const ReceiverBubble = () => {
+const ReceiverBubble = (props) => {
   return (
     <View style = {styles.receiverBubble}>
         <Text style = {{fontSize: 35}}>🦁</Text>
         <View style = {styles.receiverBubbleView}>
-            <Text style = {styles.messageText}>Template Views
-            asdf
-            asdfasdfasdasdfsadfasdfasdfasdfasdfsadf
-             asdf asdf asdf asdasdf sadfasdfsadf asdfasd fasdf dasf</Text>
+            <Text style = {styles.messageText}>{props.text}</Text>
         </View>
     </View>
   );

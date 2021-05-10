@@ -823,7 +823,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.giga;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.iykyk;
 				PRODUCT_NAME = giga;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -846,7 +846,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.giga;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.iykyk;
 				PRODUCT_NAME = giga;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

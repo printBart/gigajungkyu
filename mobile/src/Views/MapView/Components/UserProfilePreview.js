@@ -3,8 +3,8 @@ import {
     StyleSheet,
     View,
     Text,
+    TouchableOpacity
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     threadPreview: {
@@ -50,7 +50,7 @@ const UserProfilePreview = (props) => {
         <Text style = {{fontSize: 20,}}>{props.currentUserProfile.emoji ? props.currentUserProfile.emoji : "🐶"}</Text>
         <Text style = {{paddingVertical: 5, fontSize: 15,}}>{props.currentUserProfile.faculty}</Text>
         <Text style = {{paddingVertical: 10}}>Default Bio</Text>
-        <TouchableOpacity style = {{backgroundColor: "#f5f5f5", padding: 10, borderRadius: 25, marginVertical: 10,}}>
+        <TouchableOpacity style = {{backgroundColor: "#f5f5f5", padding: 10, borderRadius: 25, marginVertical: 10,}} onPress = {() => props.joinDMRoom(props.currentUserProfile.token)}>
             <Text style = {{color: "gray", paddingLeft: 5}}>Message..</Text>
         </TouchableOpacity>
         <View style = {styles.triangle}></View>

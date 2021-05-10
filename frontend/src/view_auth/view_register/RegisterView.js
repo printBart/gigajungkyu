@@ -13,7 +13,6 @@ function RegisterView() {
       await app
         .auth()
         .createUserWithEmailAndPassword(email.value, password.value).then((user) => {
-          console.log(user);
           registerUser(email.value);
         });
     } catch (error) {

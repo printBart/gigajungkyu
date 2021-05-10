@@ -9,7 +9,7 @@ import {
 
 import Geolocation from '@react-native-community/geolocation';
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import io from "socket.io-client";
+import { socket } from '../../GlobalFunctions/socket';
 
 import token from '../../../token.json';
 import Icon from 'react-native-vector-icons/Feather';
@@ -24,6 +24,7 @@ import ProfileModal from '../../GlobalComponents/ProfileModal';
 import BottomModalPreview from './Components/BottomModalPreview';
 import MessageModal from '../MessageView/MessageView';
 import UserProfilePreview from './Components/UserProfilePreview';
+import PrivateMessageView from '../MessageView/Components/PrivateMessageView';
 
 
 MapboxGL.setAccessToken(token.token);
@@ -147,8 +148,6 @@ const styles = StyleSheet.create({
   }
 });
 
-let socket;
-
 const MapView = ({navigation}) => {
   const [currentUsers, updateCurrentUsers] = useState([]);
   const [currentUserProfile, updateCurrentUserProfile] = useState(null);
@@ -159,27 +158,31 @@ const MapView = ({navigation}) => {
   const [livePosts, setLivePosts] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [displayAllThreads, setDisplayAllThreads] = useState(null);
+  const [privateMessage, setPrivateMessage] = useState(null);
 
 
   useEffect(() => {
-    socket = io('http://192.168.1.73:8080');
-
     socket.on('displayLivePosts', (livePosts) => {
       setLivePosts(livePosts);
     });
 
+    // socket.on('message', (message) => {
+    //   console.log(message);
+    // });
+
     socket.on('displayCurrentUsers', (onlineUsers) => {
       console.log(onlineUsers);
       updateCurrentUsers(onlineUsers);
-  })
+    })
     emitThread();
     Geolocation.watchPosition(
       (position) => {
+        console.log(position);
         setCurrentLocation(position);
         sendUserLocation(position.coords.longitude, position.coords.latitude)
       },
-      (error) => {console.log(error.code, error.message);},
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 50 });
+      error => Alert.alert('Error', JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},)
   }, []);
 
   const emitThread = (thread) => {
@@ -189,11 +192,20 @@ const MapView = ({navigation}) => {
 
   const sendUserLocation = (longitude, latitude) => {
     const token = firebase.auth().currentUser.uid;
-    console.log(token);
     socket.emit('sendUserLocation', {
       userToken: token,
       longitude,
       latitude
+    });
+  }
+
+  const joinDMRoom = (receiverToken) => {
+    setPrivateMessage(receiverToken);
+    updateCurrentUserProfile(null);
+    const token = firebase.auth().currentUser.uid;
+    socket.emit('joinDMRoom', {
+      senderToken: token,
+      receiverToken,
     })
   }
 
@@ -242,10 +254,11 @@ const MapView = ({navigation}) => {
                     anchor = {{x: 0.45, y: 1.7}}
                     >
                       <UserProfilePreview
-                        currentUserProfile = {currentUserProfile}/>
+                        currentUserProfile = {currentUserProfile}
+                        joinDMRoom = {joinDMRoom}/>
                   </MapboxGL.PointAnnotation>
               }
-              {currentUsers.map((currentUser, index) => {
+              {[...new Map(currentUsers.map(o => [o._id, o])).values()].map((currentUser, index) => {
                 return(
                   <MapboxGL.PointAnnotation
                     key={currentUser._id}
@@ -293,6 +306,11 @@ const MapView = ({navigation}) => {
       <MessageModal
         visible = {messageVisible}
         setVisible = {setMessageVisible}/>
+        {socket && privateMessage &&
+          <PrivateMessageView
+            visible = {privateMessage}
+            setVisible = {setPrivateMessage}
+            socket = {socket}/>}
       <BottomModalPreview
         setDisplayThread = {setDisplayThread}
         setDisplayAllThreads = {setDisplayAllThreads}/>

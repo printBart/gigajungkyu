@@ -44,7 +44,7 @@ mongoose.connect(
     `
 ).then(() => {
     io.on("connection", (socket)=>{
-        console.log("User Conntected");
+        console.log("User Conntected", socket.id);
 
         /*socket.on('postThread', (message) => {
             console.log("post Thread backend");
@@ -54,6 +54,29 @@ mongoose.connect(
                 });
             });
         });*/
+
+        socket.on('joinDMRoom', ({ senderToken, receiverToken }) => {
+            const room = senderToken < receiverToken ? (senderToken + receiverToken) : (receiverToken + senderToken);
+            console.log(room);
+            socket.join(room);
+            console.log("joined");
+            io.in(room).emit('message', {senderToken, message : senderToken + " has joined!"});
+        });
+
+        socket.on('sendMessage', ({senderToken, receiverToken, message}) => {
+            const room = senderToken < receiverToken ? senderToken + receiverToken : receiverToken + senderToken;
+            graphqlResolver.createMessage({senderToken, receiverToken, message}).then((message) => {
+                console.log(message);
+                io.in(room).emit('message',  message); 
+            });
+        })
+
+        socket.on('leaveDMRoom', ({senderToken, receiverToken}) => {
+            const room = senderToken < receiverToken ? senderToken + receiverToken : receiverToken + senderToken;
+            socket.leave(room);
+            console.log("left");
+            io.in(room).emit('message', {senderToken, message : senderToken + " has Left!"});
+        });
 
         socket.on("commentThread", (commentData) => {
             io.emit('displayCreatedComment', commentData); 
@@ -82,7 +105,7 @@ mongoose.connect(
                     onlineUsers.push(userData);
                     io.emit("displayCurrentUsers", onlineUsers);
                 });
-            }
+            };
         });
 
         socket.on('disconnect', () => {

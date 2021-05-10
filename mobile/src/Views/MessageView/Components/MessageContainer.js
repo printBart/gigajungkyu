@@ -17,16 +17,12 @@ const styles = StyleSheet.create({
 });
 
 const MessageContainer = () => {
-  const [privateMessage, setPrivateMessage] = useState(false);
   return (
     <View>
-      <TouchableOpacity style = {styles.messageContainer} onPress = {() => setPrivateMessage(true)}>
+      <TouchableOpacity style = {styles.messageContainer} onPress = {() => setPrivateMessages(true)}>
           <Text style = {{fontSize: 40}}>🦊</Text>
           <Text style = {{fontSize: 15, color: "gray", paddingLeft: 10,}}>Hey how are you doin? ∙ 12:35pm</Text>
       </TouchableOpacity>
-      <PrivateMessageView
-        visible = {privateMessage}
-        setVisible = {setPrivateMessage}/>
     </View>
   );
 }
