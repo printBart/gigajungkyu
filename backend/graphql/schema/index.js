@@ -9,6 +9,7 @@ type User{
     faculty: String
     emoji: String
     points: Float!
+    ghostmode: Boolean
 }
 
 type Post{

@@ -11,10 +11,11 @@ import {
 
 import * as firebase from 'firebase';
 import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
 
 const styles = StyleSheet.create({
     profileView: {
-        flex: 1,
+        flex: 0.75,
         justifyContent: "space-between",
         marginHorizontal: 10,
         backgroundColor: "white",
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     header: {
         display: "flex",
         flexDirection: "row",
+        height: 55,
     },
     profileButton: {
         backgroundColor: "white", 
@@ -82,28 +84,38 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         display: "flex",
         flexDirection: "row",
-        shadowColor: "#000",
-        borderRadius: 25,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
         width: "100%",
-        padding: 10
+    },
+    bioContainer: {
+        backgroundColor: "#ebf6f8",
+        padding: 10,
+        borderRadius: 10,
+        height: 70,
+    },
+    modeButton:{
+        flex: 1,
+        alignItems: "center",
+        padding: 15,
+        borderRadius: 25,
+    },
+    ghostModeButton:{
+        backgroundColor: "#7367FF",
     },
     logoutBtn: {
-        backgroundColor: "#7367FF",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         padding: 10,
-        borderRadius: 25,
+        borderRadius: 15,
+        backgroundColor: "#f5f5f5",
+        paddingLeft: 20,
     }
 });
 
 const ProfileModal = (props) => {
     const [selector, setSelector] = useState(false);
+    const [ghostMode, setGhostMode] = useState(false);
     const logoutUser = async() => {
         props.setVisible(false)
         try{
@@ -155,21 +167,22 @@ const ProfileModal = (props) => {
                             </View>}
                         </View>
                         <View style = {styles.schoolSelector}>
-                            <Text style = {{fontSize: 17}}>University of British Columbia</Text>
+                            <Text style = {{fontSize: 20}}>🏫 University of British Columbia</Text>
                         </View>
-                        <View style = {{flexDirection: "row", borderRadius: 25, backgroundColor: "#f5f5f5", padding: 15}}>
-                            <TouchableOpacity style = {{flex: 1, alignItems: "center"}}>
-                                <Text style = {{fontSize: 15}}>😎 Vibe Mode</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style = {{flex: 1, alignItems: "center"}}>
-                                <Text style = {{fontSize: 15}}>👻 Ghost Mode</Text>
-                            </TouchableOpacity>
+                        <View style = {styles.bioContainer}>
+                            <Text style = {{fontSize: 15,}}>✏️ This is my bio. DM me if you want to talk :)</Text>
                         </View>
-                        <View>
-                            <Text style = {{fontSize: 15,}}>This is my bio. DM me if you want to talk :)</Text>
+                        <View style = {{flexDirection: "row",borderRadius: 25, backgroundColor: "#f5f5f5"}}>
+                            <TouchableOpacity style = {!ghostMode ? [styles.modeButton, styles.ghostModeButton] : styles.modeButton} onPress = {() => setGhostMode(false)}>
+                                <Text style = {!ghostMode ? {fontSize: 15, fontWeight: "bold", color: "white"} : {fontSize: 15}}>😎 Vibe Mode</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style = {ghostMode ? [styles.modeButton, styles.ghostModeButton] : styles.modeButton} onPress = {() => setGhostMode(true)}>
+                                <Text style = {ghostMode ? {fontSize: 15, fontWeight: "bold", color: "white"} : {fontSize: 15}}>👻 Ghost Mode</Text>
+                            </TouchableOpacity>
                         </View>
                         <TouchableOpacity style = {styles.logoutBtn} onPress = {logoutUser}>
-                            <Text style = {{textAlign: "center", fontSize: 20, fontWeight: "bold", color: "white"}}>Logout</Text>
+                            <Text style = {{ fontSize: 17, fontWeight: "bold", color: "#3C3C3D"}}>Logout</Text>
+                            <Icon name = "chevron-right" size = {20}/>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style = {styles.filler} onPress = {() => props.setVisible(false)}></TouchableOpacity>

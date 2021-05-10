@@ -27,6 +27,10 @@ const userSchema = new Schema({
         type: Number,
         required: true,
     },
+    ghostmode:{
+        type: Boolean,
+        required: false,
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

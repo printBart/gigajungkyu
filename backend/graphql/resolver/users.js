@@ -20,6 +20,7 @@ module.exports = {
                 username: username,
                 emoji: emoji,
                 points: 0,
+                ghostmode: false,
             });
 
             //store user variable of type User to db
