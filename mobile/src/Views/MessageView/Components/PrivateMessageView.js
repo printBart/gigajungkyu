@@ -40,7 +40,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import { postRequest } from '../../../GlobalFunctions/request';
 import { getAllMessagesByRoom } from '../../../GlobalFunctions/queries';
 
-const token = firebase.auth().currentUser.uid;
+let token;
 
 const PrivateMessageView = (props) => {
     const scrollView = useRef();
@@ -48,6 +48,7 @@ const PrivateMessageView = (props) => {
     const [currentMessages, changeCurrentMessages] = useState([]);
 
     useEffect(() => {
+        token = firebase.auth().currentUser.uid;
         getAllPreviousMessages();
         socket.on('message', (message) => {
             changeCurrentMessages(prevMessages => [...prevMessages, message]);
@@ -81,6 +82,8 @@ const PrivateMessageView = (props) => {
         await socket.emit('leaveDMRoom', {senderToken: props.visible, receiverToken: firebase.auth().currentUser.uid});
         props.setVisible(null);
     }
+
+    console.log(currentMessages);
 
   return (
     <Modal

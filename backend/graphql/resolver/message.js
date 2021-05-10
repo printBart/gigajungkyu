@@ -1,14 +1,16 @@
 const Message = require("../../models/Message");
 const User = require("../../models/User");
+const { transformMessage } = require("./transformer");
 
 module.exports = {
     getAllMessagesByRoom: async({senderToken, receiverToken}) => {
         try{
             const room = senderToken < receiverToken ? senderToken + receiverToken : receiverToken + senderToken;
             const messages = await Message.find({room});
-            console.log(messages);
 
-            return messages;
+            return messages.map(message => {
+                return transformMessage(message);
+            });
 
         } catch(err){
             throw err;

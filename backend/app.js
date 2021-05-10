@@ -66,7 +66,6 @@ mongoose.connect(
         socket.on('sendMessage', ({senderToken, receiverToken, message}) => {
             const room = senderToken < receiverToken ? senderToken + receiverToken : receiverToken + senderToken;
             graphqlResolver.createMessage({senderToken, receiverToken, message}).then((message) => {
-                console.log(message);
                 io.in(room).emit('message',  message); 
             });
         })

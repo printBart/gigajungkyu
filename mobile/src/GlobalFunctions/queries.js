@@ -205,9 +205,13 @@ export function getAllMessagesByRoom(senderToken, receiverToken){
               _id
               senderToken{
                 _id
+                token
+                emoji
               }
               receiverToken{
                 _id
+                token
+                emoji
               }
               message
               room

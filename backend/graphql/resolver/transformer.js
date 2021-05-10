@@ -48,4 +48,14 @@ const transformComment = comment => {
     }
 }
 
+const transformMessage = message => {
+    return{
+        ...message._doc,
+        _id: message.id,
+        senderToken: user.bind(this, message._doc.senderToken),
+        receiverToken: user.bind(this, message._doc.receiverToken)
+    }
+}
+
 exports.transformComment = transformComment;
+exports.transformMessage =  transformMessage;
