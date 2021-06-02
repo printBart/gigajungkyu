@@ -171,13 +171,15 @@ const MapView = ({navigation}) => {
     // });
 
     socket.on('displayCurrentUsers', (onlineUsers) => {
-      console.log(onlineUsers);
       updateCurrentUsers(onlineUsers);
     })
     emitThread();
+    Geolocation.getCurrentPosition((position) => {
+      setCurrentLocation(position);
+      sendUserLocation(position.coords.longitude, position.coords.latitude)
+    });
     Geolocation.watchPosition(
       (position) => {
-        console.log(position);
         setCurrentLocation(position);
         sendUserLocation(position.coords.longitude, position.coords.latitude)
       },
@@ -229,7 +231,6 @@ const MapView = ({navigation}) => {
               animationDuration = {1000}
               followUserLocation = {true}>
             </MapboxGL.Camera>
-       
             {livePosts.map((post) => {
                 return(
                   <MapboxGL.PointAnnotation
@@ -278,10 +279,11 @@ const MapView = ({navigation}) => {
         currentLocation = {currentLocation}
         setDisplayThread = {setDisplayThread}
         emitThread = {emitThread}/>
-      <ThreadView
-        displayAllThreads = {displayAllThreads}
-        setDisplayAllThreads = {setDisplayAllThreads}
-        toggleCreateThread = {toggleCreateThreadFromList}/>
+      {displayAllThreads &&
+        <ThreadView
+          displayAllThreads = {displayAllThreads}
+          setDisplayAllThreads = {setDisplayAllThreads}
+          toggleCreateThread = {toggleCreateThreadFromList}/>}
 
       {selectedThread &&
       <ThreadModal

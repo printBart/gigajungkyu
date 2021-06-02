@@ -19,6 +19,7 @@ export function getAllPostsQuery(){
                 creator{
                     _id
                     username
+                    emoji
                 }
                 latitude
                 longitude
@@ -40,6 +41,7 @@ export function getAllCommentsByPostIdQuery(postId){
                 creator{
                     _id
                     username
+                    emoji
                 }
                 latitude
                 longitude

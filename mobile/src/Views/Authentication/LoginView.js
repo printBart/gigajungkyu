@@ -82,7 +82,7 @@ const LoginView = ({navigation}) => {
             </TouchableOpacity>
             <View style = {styles.login}>
                 <View>
-                    <Text style = {styles.title}>🐳 app name</Text>
+                    <Text style = {styles.title}>🐳 iykyk</Text>
                 </View>
                 <View style = {{paddingVertical: 50,}}>
                     <TextInput

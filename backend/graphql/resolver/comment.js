@@ -7,6 +7,17 @@ module.exports = {
     createComment: async({ description, creator, latitude, longitude, postId, parentComment}) => {
         try{
             const creatorObj = await User.findOne({token: creator});
+            
+            if(description.length < 3){
+                throw "Comment description must have a greater length than 3 characters";
+            }
+            if(latitude < -90 || latitude > 90){
+                throw "Invalid latitude";
+            }
+            if(longitude < -180 || longitude > 180){
+                throw "Invalid longitude"
+            }
+
             const comment = new Comment({
                 description: description,
                 creator: creatorObj,
@@ -54,7 +65,7 @@ module.exports = {
             });
 
         } catch(err){
-
+            throw(err);
         }
     },
 

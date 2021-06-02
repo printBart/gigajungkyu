@@ -78,13 +78,13 @@ const EmailRegisterView = ({navigation}) => {
                     <FontAwesome5Icon name = "chevron-left" size = {30} color = "#e8e8e8"/>
                 </TouchableOpacity>
                 <View style = {{paddingHorizontal: 25, paddingVertical: 10,}}>
-                    <Text style = {styles.headerText}>Enter your UBC Email</Text>
+                    <Text style = {styles.headerText}>Enter your uOttawa Email</Text>
                     <TextInput
                         style={[styles.textInput, validIndicator && {borderBottomColor: "#ff5c5c"}]}
                         onChangeText={text => {onChangeEmail(text), onChangeValidIndicator((val) => val && false)}}
                         value={email}
                         maxLength = {320}
-                        placeholder = "yourschoolemail@ubc.ca"
+                        placeholder = "yourschoolemail@uottawa.ca"
                         autoCapitalize = "none"
                         autoFocus = {true}
                     />

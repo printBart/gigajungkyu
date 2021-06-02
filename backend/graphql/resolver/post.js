@@ -3,10 +3,22 @@ const Post = require('../../models/Post');
 const User = require('../../models/User');
 
 module.exports = {
-    //create post
     createPost: async({ title, description, creator, latitude, longitude, emoji, isNightmode }) => {
         try{
             const creatorObj = await User.findOne({token: creator});
+            if(title.length < 3){
+                throw "Post title must have a greater length than 3 characters";
+            }
+            if(description.length < 3){
+                throw "Post description must have a greater length than 3 characters";
+            }
+            if(latitude < -90 || latitude > 90){
+                throw "Invalid latitude";
+            }
+            if(longitude < -180 || longitude > 180){
+                throw "Invalid longitude"
+            }
+            
             const post = new Post({
                 title: title,
                 description: description,

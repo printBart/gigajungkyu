@@ -11,6 +11,7 @@ import {
 
 import { postRequest } from '../GlobalFunctions/request';
 import { createCommentQuery } from '../GlobalFunctions/queries';
+import * as firebase from "firebase";
 
 const styles = StyleSheet.create({
   commentModal: {
@@ -64,10 +65,10 @@ const CommentModal = (props) => {
   const [comment, setComment] = useState("");
 
   const postComment = () => {
-    const commentId = props.displayComment._id !== props.post._id && props.displayComment._id;
-    console.log(commentId);
+    const commentId = props.displayComment._id !== props.post._id ? props.displayComment._id : null;
+    const token = firebase.auth().currentUser.uid;
     var request = postRequest(
-      createCommentQuery(comment, "lK5Apx1GNsaDw8UZK8zpJnRTNR33", props.currentLocation.coords.latitude, props.currentLocation.coords.longitude, props.post._id, commentId),
+      createCommentQuery(comment, token, props.currentLocation.coords.latitude, props.currentLocation.coords.longitude, props.post._id, commentId),
         "/graphql"
     );
     fetch(request).then((response) => {

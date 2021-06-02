@@ -167,7 +167,7 @@ const ProfileModal = (props) => {
                             </View>}
                         </View>
                         <View style = {styles.schoolSelector}>
-                            <Text style = {{fontSize: 20}}>🏫 University of British Columbia</Text>
+                            <Text style = {{fontSize: 20}}>🏫 University of Ottawa</Text>
                         </View>
                         <View style = {styles.bioContainer}>
                             <Text style = {{fontSize: 15,}}>✏️ This is my bio. DM me if you want to talk :)</Text>

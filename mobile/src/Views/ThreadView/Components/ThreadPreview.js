@@ -71,14 +71,14 @@ const ThreadPreview = (props) => {
                 <TouchableOpacity>
                     <FeatherIcon name="chevron-up" size={35} />
                 </TouchableOpacity>
-                <Text>83</Text>
+                <Text>0</Text>
                 <TouchableOpacity>
                     <FeatherIcon name="chevron-down" size={35} />
                 </TouchableOpacity>
             </View>
             <View style = {styles.threadBodyContainer}>
                 <View>
-                    <Text style = {styles.threadTitle}>{props.post.emoji} {props.post.title}</Text>
+                    <Text style = {styles.threadTitle}>{props.post?.emoji} {props.post?.title}</Text>
                 </View>
                 <Text style = {styles.threadDescription}>{props.post.description}</Text>
                 <View style = {styles.footer}>
@@ -86,7 +86,7 @@ const ThreadPreview = (props) => {
                         <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
                         <Text style ={styles.footerRight}>&nbsp;Comments</Text>
                     </View>
-                    <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(Number(props.post.date))} ago</Text>
+                    <Text style = {styles.footerRight}>{props.post?.creator?.emoji} {convertDeltaMilisToTime(Number(props.post?.date))} ago</Text>
                 </View>
             </View>
         </TouchableOpacity>

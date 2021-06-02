@@ -47,7 +47,7 @@ const SplashView = ({navigation}) => {
 
   return (
     <View style = {styles.splashView}>
-      <Text style = {styles.title}>🐳 app title</Text>
+      <Text style = {styles.title}>🐳 iykyk</Text>
     </View>
   );
 }

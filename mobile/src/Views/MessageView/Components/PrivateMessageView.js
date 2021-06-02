@@ -83,8 +83,6 @@ const PrivateMessageView = (props) => {
         props.setVisible(null);
     }
 
-    console.log(currentMessages);
-
   return (
     <Modal
     transparent={true}

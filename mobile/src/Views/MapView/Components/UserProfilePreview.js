@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
 });
 
 const UserProfilePreview = (props) => {
-    console.log(props);
   return (
     <View style = {styles.threadPreview}>
         <Text style = {{fontSize: 20,}}>{props.currentUserProfile.emoji ? props.currentUserProfile.emoji : "🐶"}</Text>

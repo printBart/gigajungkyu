@@ -55,7 +55,7 @@ const AuthenticationView = ({navigation}) => {
     <View style = {styles.loginView}>
         <View style={{flex: 0.5}}></View>
         <View style={styles.middleView}>
-            <Text style = {styles.title}>🐳 app name</Text>
+            <Text style = {styles.title}>🐳 iykyk</Text>
         </View>
         <View style = {styles.bottomView}>
             <TouchableOpacity style = {styles.createAccount} onPress = {() => navigation.navigate('email')}>

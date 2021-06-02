@@ -279,7 +279,7 @@ const ThreadModal = (props) => {
                                     <MaterialCommunityIcons name = "comment" size = {15} color = "gray"/>
                                     <Text style ={styles.footerLeft}>&nbsp;Comments</Text>
                                 </TouchableOpacity>
-                                <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(props.selectedThread.date)} ago</Text>
+                                <Text style = {styles.footerRight}>🐻 {convertDeltaMilisToTime(Number(props.selectedThread.date))} ago</Text>
                             </View>
                         </View>
                     </View>
@@ -294,7 +294,7 @@ const ThreadModal = (props) => {
                                                     <TouchableOpacity>
                                                         <FeatherIcon name="chevron-up" size={35} color = {"lightgray"} />
                                                     </TouchableOpacity>
-                                                    <Text style={{fontSize: 15, fontWeight: "600"}}>10</Text>
+                                                    <Text style={{fontSize: 15, fontWeight: "600"}}>0</Text>
                                                     <TouchableOpacity>
                                                         <FeatherIcon name="chevron-down" size={35} color = {"lightgray"} />
                                                     </TouchableOpacity>
@@ -306,7 +306,7 @@ const ThreadModal = (props) => {
                                                             <MaterialCommunityIcons name = "reply" size = {15} color = "gray"/>
                                                             <Text style ={styles.footerLeft}>&nbsp;Reply</Text>
                                                         </TouchableOpacity>
-                                                        <Text style = {styles.footerRight}>🐵 {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
+                                                        <Text style = {styles.footerRight}>{comment.creator?.emoji} {convertDeltaMilisToTime(Number(comment.date))} ago</Text>
                                                     </View>
                                                 </View>
                                             </TouchableOpacity>
